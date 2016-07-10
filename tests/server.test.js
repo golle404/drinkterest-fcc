@@ -7,7 +7,7 @@ import jade from 'jade';
 const url = 'http://localhost:' + serverConfig.PORT;
 
 let server = supertest.agent(url);
-let userId;
+let userId, drinkId;
 
 describe('Server API test', function () {
 
@@ -70,6 +70,22 @@ describe('Server API test', function () {
     });
   });
 
+  it('does not allow adding submission when loged out', (done) => {
+    const drink = {
+      name: "vodka",
+      url: "http://vodka.com",
+      image: "http://vodka.com/vodka.jpg"
+    }
+    server.post("/api/drink")
+    .send(drink)
+    .end((err, res) => {
+      res.type.should.equal('application/json');
+      res.body.error.should.equal("Forbiden");
+      done();
+    })
+
+  })
+
   it('does not login with wrong password', (done) => {
     const profile = {
       username: "admin",
@@ -107,6 +123,38 @@ describe('Server API test', function () {
       done();
     });
   });
+
+  it('posts submission', (done) => {
+    const drink = {
+      name: "vodka",
+      url: "http://vodka.com",
+      image: "http://vodka.com/vodka.jpg"
+    }
+    server.post("/api/drink")
+    .send(drink)
+    .end((err, res) => {
+      res.type.should.equal('application/json');
+      res.body.name.should.equal("vodka");
+      res.body.url.should.equal("http://vodka.com");
+      res.body.submitterName.should.equal("admin");
+      res.body.likes.length.should.equal(1);
+      res.body.likes[0].should.equal(res.body.submitterId);
+      drinkId = res.body.id;
+      done();
+    })
+
+  })
+
+  it('put like', (done) => {
+
+    server.put("/api/drink/like/" + drinkId)
+    .end((err, res) => {
+      res.type.should.equal('application/json');
+      res.body.likes.length.should.equal(0);
+      done();
+    })
+
+  })
 
   it('deletes user profile', (done) => {
     server.delete("/auth")

@@ -1,8 +1,12 @@
 import {Router} from 'express';
 import passport from 'passport';
 import * as userCtrl from '../controllers/userCtrl';
+import * as drinkCtrl from '../controllers/drinkCtrl';
 
 let router = Router();
+////////////  API  /////////////////
+router.post('/api/drink', isLoggedIn, drinkCtrl.addDrink);
+router.put('/api/drink/like/:id', isLoggedIn, drinkCtrl.likeDrink);
 
 ////////// AUTH ROUTES /////////////
 router.post('/auth/register', (req, res, next) => {
