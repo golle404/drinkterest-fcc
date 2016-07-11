@@ -177,6 +177,45 @@ describe('Server API test', function () {
 
   })
 
+  it('loads dummy submissions', (done) => {
+    server.post("/api/dummy")
+    .end((err, res) => {
+      res.type.should.equal('application/json');
+      res.body.success.should.equal(true)
+      done();
+    })
+  }).timeout(5000)
+
+  it('get default submissions', (done) => {
+    server.get("/api/drink/list")
+    .end((err, res) => {
+      //console.log(res.body);
+      res.type.should.equal('application/json');
+      res.body.drinks.length.should.equal(20)
+      done();
+    })
+  })
+
+  it('get popular submissions', (done) => {
+    server.get("/api/drink/list")
+    .send({sort: "popular"})
+    .end((err, res) => {
+      console.log(res.body.drinks);
+      res.type.should.equal('application/json');
+      res.body.drinks.length.should.equal(20)
+      done();
+    })
+  })
+
+  it('deletes dummy submissions', (done) => {
+    server.delete("/api/dummy")
+    .end((err, res) => {
+      res.type.should.equal('application/json');
+      res.body.success.should.equal(true)
+      done();
+    })
+  })
+
   it('deletes user profile', (done) => {
     server.delete("/auth")
     .end((err, res) => {
