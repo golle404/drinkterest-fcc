@@ -14,9 +14,9 @@ const drink = {
   image: "http://vodka.com/vodka.jpg"
 }
 const newDrink = {
-  name: "vodka",
-  url: "http://vodka.com",
-  image: "http://vodka.com/vodka.jpg"
+  name: "beer",
+  url: "http://beer.com",
+  image: "http://beer.com/beer.jpg"
 }
 
 const profile = {
@@ -154,16 +154,28 @@ describe('Server API test', function () {
 
   })
 
-  /*it('edits submission', (done) => {
+  it('edits submission', (done) => {
     server.put("/api/drink/" + drinkId)
     .send(newDrink)
     .end((err, res) => {
       res.type.should.equal('application/json');
-      res.body.likes.length.should.equal(0);
+      res.body.name.should.equal(newDrink.name);
+      res.body.url.should.equal(newDrink.url);
+      res.body.submitterName.should.equal(profile.username);
       done();
     })
 
-  })*/
+  })
+
+  it('deletes submission', (done) => {
+    server.delete("/api/drink/" + drinkId)
+    .end((err, res) => {
+      res.type.should.equal('application/json');
+      res.body.success.should.equal(true)
+      done();
+    })
+
+  })
 
   it('deletes user profile', (done) => {
     server.delete("/auth")

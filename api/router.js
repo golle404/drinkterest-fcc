@@ -7,6 +7,8 @@ let router = Router();
 ////////////  API  /////////////////
 router.post('/api/drink', isLoggedIn, drinkCtrl.addDrink);
 router.put('/api/like/:id', isLoggedIn, drinkCtrl.likeDrink);
+router.put('/api/drink/:id', isLoggedIn, drinkCtrl.editDrink);
+router.delete('/api/drink/:id', isLoggedIn, drinkCtrl.deleteDrink);
 
 ////////// AUTH ROUTES /////////////
 router.post('/auth/register', (req, res, next) => {
