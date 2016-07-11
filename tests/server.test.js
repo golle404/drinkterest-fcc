@@ -7,6 +7,31 @@ import jade from 'jade';
 const url = 'http://localhost:' + serverConfig.PORT;
 
 let server = supertest.agent(url);
+
+const drink = {
+  name: "vodka",
+  url: "http://vodka.com",
+  image: "http://vodka.com/vodka.jpg"
+}
+const newDrink = {
+  name: "vodka",
+  url: "http://vodka.com",
+  image: "http://vodka.com/vodka.jpg"
+}
+
+const profile = {
+  username: "unit",
+  password: "test"
+}
+const wrongUsername = {
+  username: "wrong",
+  password: "username"
+}
+const wrongPassword = {
+  username: "unit",
+  password: "error"
+}
+
 let userId, drinkId;
 
 describe('Server API test', function () {
@@ -32,16 +57,11 @@ describe('Server API test', function () {
   })
 
   it('registers account', (done) => {
-    const profile = {
-      username: "admin",
-      password: "admin"
-    }
     server.post("/auth/register")
     .send(profile)
     .end((err, res) => {
       res.type.should.equal('application/json');
-      res.body.user.username.should.equal('admin');
-      //userId = res.body.user.id;
+      res.body.user.username.should.equal(profile.username);
       done();
     });
   });
@@ -56,10 +76,6 @@ describe('Server API test', function () {
   })
 
   it('does not register account if username exists', (done) => {
-    const profile = {
-      username: "admin",
-      password: "test"
-    }
     server.post("/auth/register")
     .send(profile)
     .end((err, res) => {
@@ -71,11 +87,6 @@ describe('Server API test', function () {
   });
 
   it('does not allow adding submission when loged out', (done) => {
-    const drink = {
-      name: "vodka",
-      url: "http://vodka.com",
-      image: "http://vodka.com/vodka.jpg"
-    }
     server.post("/api/drink")
     .send(drink)
     .end((err, res) => {
@@ -87,12 +98,8 @@ describe('Server API test', function () {
   })
 
   it('does not login with wrong password', (done) => {
-    const profile = {
-      username: "admin",
-      password: "test"
-    }
     server.post("/auth/login")
-    .send(profile)
+    .send(wrongPassword)
     .end((err, res) => {
       res.type.should.equal('application/json');
       should.exists(res.body.error);
@@ -102,15 +109,11 @@ describe('Server API test', function () {
   });
 
   it('logs in', (done) => {
-    const profile = {
-      username: "admin",
-      password: "admin"
-    }
     server.post("/auth/login")
     .send(profile)
     .end((err, res) => {
       res.type.should.equal('application/json');
-      res.body.user.username.should.equal('admin');
+      res.body.user.username.should.equal(profile.username);
       done();
     });
   });
@@ -125,18 +128,13 @@ describe('Server API test', function () {
   });
 
   it('posts submission', (done) => {
-    const drink = {
-      name: "vodka",
-      url: "http://vodka.com",
-      image: "http://vodka.com/vodka.jpg"
-    }
     server.post("/api/drink")
     .send(drink)
     .end((err, res) => {
       res.type.should.equal('application/json');
-      res.body.name.should.equal("vodka");
-      res.body.url.should.equal("http://vodka.com");
-      res.body.submitterName.should.equal("admin");
+      res.body.name.should.equal(drink.name);
+      res.body.url.should.equal(drink.url);
+      res.body.submitterName.should.equal(profile.username);
       res.body.likes.length.should.equal(1);
       res.body.likes[0].should.equal(res.body.submitterId);
       drinkId = res.body.id;
@@ -145,7 +143,7 @@ describe('Server API test', function () {
 
   })
 
-  it('put like', (done) => {
+  it('puts like', (done) => {
 
     server.put("/api/like/" + drinkId)
     .end((err, res) => {
@@ -155,6 +153,17 @@ describe('Server API test', function () {
     })
 
   })
+
+  /*it('edits submission', (done) => {
+    server.put("/api/drink/" + drinkId)
+    .send(newDrink)
+    .end((err, res) => {
+      res.type.should.equal('application/json');
+      res.body.likes.length.should.equal(0);
+      done();
+    })
+
+  })*/
 
   it('deletes user profile', (done) => {
     server.delete("/auth")
