@@ -32,7 +32,7 @@ const wrongPassword = {
   password: "error"
 }
 
-let userId, drinkId;
+let userId, drinkId, dummyData;
 
 describe('Server API test', function () {
 
@@ -137,14 +137,13 @@ describe('Server API test', function () {
       res.body.submitterName.should.equal(profile.username);
       res.body.likes.length.should.equal(1);
       res.body.likes[0].should.equal(res.body.submitterId);
-      drinkId = res.body.id;
+      drinkId = res.body._id;
       done();
     })
 
   })
 
   it('puts like', (done) => {
-
     server.put("/api/like/" + drinkId)
     .end((err, res) => {
       res.type.should.equal('application/json');
@@ -180,18 +179,25 @@ describe('Server API test', function () {
   it('loads dummy submissions', (done) => {
     server.post("/api/dummy")
     .end((err, res) => {
+      dummyData = res.body.data;
+      //console.log(res.body.data.length);
       res.type.should.equal('application/json');
       res.body.success.should.equal(true)
       done();
     })
-  }).timeout(5000)
+  }).timeout(10000)
 
   it('get default submissions', (done) => {
     server.get("/api/drink/list")
     .end((err, res) => {
-      //console.log(res.body);
       res.type.should.equal('application/json');
       res.body.drinks.length.should.equal(20)
+      const latest = dummyData.sort((a, b) => {
+        return new Date(b.likes.createdAt) - new Date(a.likes.createdAt);
+      });
+      const randomIndex = Math.floor(Math.random()*20);
+      //console.log(latest);
+      res.body.drinks[randomIndex].name.should.equal(latest[randomIndex].name)
       done();
     })
   })
@@ -200,9 +206,22 @@ describe('Server API test', function () {
     server.get("/api/drink/list")
     .send({sort: "popular"})
     .end((err, res) => {
-      console.log(res.body.drinks);
       res.type.should.equal('application/json');
       res.body.drinks.length.should.equal(20)
+      const popular = dummyData.sort((a, b) => { return b.likes.length - a.likes.length });
+      const randomIndex = Math.floor(Math.random()*20);
+      res.body.drinks[randomIndex].numLikes.should.equal(popular[randomIndex].likes.length)
+      done();
+    })
+  })
+
+  it('get user submissions', (done) => {
+    server.get("/api/drink/list")
+    .send({submitterId: 4})
+    .end((err, res) => {
+      res.type.should.equal('application/json');
+      const filtered = res.body.drinks.filter((d) => { return d.submitterId === "4"})
+      res.body.drinks.length.should.equal(filtered.length)
       done();
     })
   })

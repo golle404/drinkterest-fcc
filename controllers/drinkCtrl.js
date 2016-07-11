@@ -6,6 +6,7 @@ export function addDrink(req, res, next){
   drink.submitterId = req.user.id;
   drink.submitterName = req.user.local.username;
   drink.likes = [req.user.id];
+  drink.createdAt = new Date;
   drink.save((err) => {
     if(err){
       return res.json({error: err})
@@ -15,6 +16,7 @@ export function addDrink(req, res, next){
 }
 
 export function likeDrink(req, res, next){
+  console.log(req.params.id);
   Drink.findById(req.params.id, (err, drink) => {
     if(err){
       return res.json({error: err})
@@ -54,7 +56,7 @@ export function deleteDrink(req, res, next){
 
 export function queryDrinks(req, res, next){
   const start = req.body.start || 0;
-  let sortBy = {createdAt: -1};
+  let sortBy = {createdAt: 1};
   if(req.body.sort === "popular"){
     Drink.aggregate()
       .project({
@@ -96,6 +98,7 @@ export function queryDrinks(req, res, next){
 ///////////////   for testing only - loads dummmy data from reddit  /////////////////
 export function loadDummyData(req, res, next){
   const url = "https://www.reddit.com/r/drinks/search.json?q=site%3Aimgur.com&restrict_sr=on&sort=relevance&t=all";
+  let drinks = [];
   fetch(url).then((response) => {
     response.json().then((json) => {
       json.data.children.forEach((child, id) => {
@@ -105,16 +108,18 @@ export function loadDummyData(req, res, next){
           image: child.data.thumbnail,
           likes: [],
           submitterId: id % 7,
-          submitterName: "dummy__" + (id % 7)
+          submitterName: "dummy__" + (id % 7),
+          createdAt: id
         }
         for(let i=0; i<child.data.score; i++){
           d.likes.push("dummy_like_" + i);
         }
+        drinks.push(d);
         let drink = new Drink(d);
         drink.save()
       })
     }).then(() => {
-      res.json({success: true});
+      res.json({success: true, data: drinks});
     })
   })
 }

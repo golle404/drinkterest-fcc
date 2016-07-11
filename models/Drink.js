@@ -13,8 +13,9 @@ const drinkSchema = new Schema({
   image: String,
   submitterId: String,
   submitterName: String,
-  likes: [String]
-}, schemaOptions);
+  likes: [String],
+  createdAt: Date
+});
 
 const Drink = mongoose.model('Drink', drinkSchema);
 
