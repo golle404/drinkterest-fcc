@@ -6,7 +6,7 @@ import * as drinkCtrl from '../controllers/drinkCtrl';
 let router = Router();
 ////////////  API  /////////////////
 router.post('/api/drink', isLoggedIn, drinkCtrl.addDrink);
-router.put('/api/drink/like/:id', isLoggedIn, drinkCtrl.likeDrink);
+router.put('/api/like/:id', isLoggedIn, drinkCtrl.likeDrink);
 
 ////////// AUTH ROUTES /////////////
 router.post('/auth/register', (req, res, next) => {

@@ -147,7 +147,7 @@ describe('Server API test', function () {
 
   it('put like', (done) => {
 
-    server.put("/api/drink/like/" + drinkId)
+    server.put("/api/like/" + drinkId)
     .end((err, res) => {
       res.type.should.equal('application/json');
       res.body.likes.length.should.equal(0);
