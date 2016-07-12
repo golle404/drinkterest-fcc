@@ -193,11 +193,12 @@ describe('Server API test', function () {
       res.type.should.equal('application/json');
       res.body.drinks.length.should.equal(20)
       const latest = dummyData.sort((a, b) => {
-        return new Date(b.likes.createdAt) - new Date(a.likes.createdAt);
+        return b.createdAt - a.createdAt;
       });
       const randomIndex = Math.floor(Math.random()*20);
-      //console.log(latest);
-      res.body.drinks[randomIndex].name.should.equal(latest[randomIndex].name)
+      const bd = new Date(res.body.drinks[randomIndex].createdAt).toString();
+      const fd = new Date(latest[randomIndex].createdAt).toString();
+      bd.should.equal(fd)
       done();
     })
   })

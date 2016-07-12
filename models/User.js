@@ -1,12 +1,18 @@
 import bcrypt from 'bcrypt-nodejs';
 import mongoose, {Schema} from 'mongoose';
 
+const schemaOptions = {
+  toJSON: {
+    virtuals: true
+  }
+};
+
 let userSchema = new Schema({
   local: {
     username: String,
     password: String
   }
-});
+}, schemaOptions);
 
 userSchema.methods.generateHash = function(password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);

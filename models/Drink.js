@@ -1,7 +1,6 @@
 import mongoose, {Schema} from 'mongoose';
 
 const schemaOptions = {
-  timestamps: true,
   toJSON: {
     virtuals: true
   }
@@ -14,9 +13,17 @@ const drinkSchema = new Schema({
   submitterId: String,
   submitterName: String,
   likes: [String],
-  createdAt: Date
-});
+  createdAt: Date,
+  numLikes: Number
+}, schemaOptions);
 
+drinkSchema.pre('save', function(next){
+  var drink = this;
+  if(drink.isModified("likes")){
+    drink.numLikes = drink.likes.length;
+  }
+  next();
+})
 const Drink = mongoose.model('Drink', drinkSchema);
 
 export default Drink;

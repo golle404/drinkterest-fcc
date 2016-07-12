@@ -4,12 +4,10 @@ import {Strategy as LocalStrategy} from 'passport-local';
 export default function init(passport){
 
   passport.serializeUser((user, done) => {
-    //console.log("S ",user);
       done(null, user.id);
   });
 
   passport.deserializeUser((id, done) => {
-    //console.log("ds ",id);
       User.findById(id, (err, user) => {
           done(err, user);
       });

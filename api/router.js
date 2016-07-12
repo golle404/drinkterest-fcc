@@ -21,7 +21,7 @@ router.post('/auth/register', (req, res, next) => {
       return res.json({error: err})
     }
     if(user){
-      const profile = {username: user.local.username, id: user._id};
+      const profile = {username: user.local.username, id: user.id};
       req.logIn(profile, (loginErr) => {
         if(loginErr){
           return res.json({error: loginErr});
@@ -38,7 +38,7 @@ router.post('/auth/login', (req, res, next) => {
       return res.json({error: err})
     }
     if(user){
-      const profile = {username: user.local.username, id: user._id};
+      const profile = {username: user.local.username, id: user.id};
       req.logIn(profile, (loginErr) => {
         if(loginErr){
           return res.json({error: loginErr});

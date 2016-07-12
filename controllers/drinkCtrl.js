@@ -16,7 +16,6 @@ export function addDrink(req, res, next){
 }
 
 export function likeDrink(req, res, next){
-  console.log(req.params.id);
   Drink.findById(req.params.id, (err, drink) => {
     if(err){
       return res.json({error: err})
@@ -56,8 +55,23 @@ export function deleteDrink(req, res, next){
 
 export function queryDrinks(req, res, next){
   const start = req.body.start || 0;
-  let sortBy = {createdAt: 1};
+  let sortBy = {};
+  let query = {}
+  if(req.body.submitterId){
+    query.submitterId = req.body.submitterId;
+  }
   if(req.body.sort === "popular"){
+    sortBy.numLikes = -1;
+  }else{
+    sortBy.createdAt = -1;
+  }
+  Drink.find(query).sort(sortBy).skip(start).limit(20).exec((err, doc) => {
+    if(err){
+      return res.json({error: err})
+    }
+    res.json({drinks: doc});
+  })
+  /*if(req.body.sort === "popular"){
     Drink.aggregate()
       .project({
         name: 1,
@@ -90,7 +104,7 @@ export function queryDrinks(req, res, next){
       }
       res.json({drinks: doc});
     })
-  }
+  }*/
 
 }
 
