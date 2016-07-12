@@ -15,8 +15,9 @@
   },
   "scripts": {
     "start": "node-dev --debug index.js",
-    "test": "npm run test:server",
-    "test:server": "mocha tests --recursive --compilers js:babel-register"
+    "test": "npm run test:reducers",
+    "test:server": "mocha tests --recursive --compilers js:babel-register",
+    "test:reducers": "mocha app/reducers --recursive --compilers js:babel-register"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +28,7 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "express-session": "^1.14.0",
+    "immutable": "^3.8.1",
     "jade": "^1.11.0",
     "mongoose": "^4.5.3",
     "node-fetch": "^1.5.3",
