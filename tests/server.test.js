@@ -180,7 +180,6 @@ describe('Server API test', function () {
     server.post("/api/dummy")
     .end((err, res) => {
       dummyData = res.body.data;
-      //console.log(res.body.data.length);
       res.type.should.equal('application/json');
       res.body.success.should.equal(true)
       done();
@@ -191,14 +190,14 @@ describe('Server API test', function () {
     server.get("/api/drink/list")
     .end((err, res) => {
       res.type.should.equal('application/json');
-      res.body.drinks.length.should.equal(20)
       const latest = dummyData.sort((a, b) => {
         return b.createdAt - a.createdAt;
       });
-      const randomIndex = Math.floor(Math.random()*20);
+      const randomIndex = Math.floor(Math.random()*res.body.drinks.length);
       const bd = new Date(res.body.drinks[randomIndex].createdAt).toString();
       const fd = new Date(latest[randomIndex].createdAt).toString();
       bd.should.equal(fd)
+      res.body.total.should.equal(dummyData.length);
       done();
     })
   })
@@ -210,19 +209,58 @@ describe('Server API test', function () {
       res.type.should.equal('application/json');
       res.body.drinks.length.should.equal(20)
       const popular = dummyData.sort((a, b) => { return b.likes.length - a.likes.length });
-      const randomIndex = Math.floor(Math.random()*20);
+      const randomIndex = Math.floor(Math.random()*res.body.drinks.length);
       res.body.drinks[randomIndex].numLikes.should.equal(popular[randomIndex].likes.length)
       done();
     })
   })
 
-  it('get user submissions', (done) => {
+  it('get popular submissions 2nd page', (done) => {
+    server.get("/api/drink/list")
+    .send({sort: "popular", start: 10})
+    .end((err, res) => {
+      res.type.should.equal('application/json');
+      res.body.drinks.length.should.equal(dummyData.length - 10)
+      const popular = dummyData.sort((a, b) => { return b.likes.length - a.likes.length });
+      const randomIndex = Math.floor(Math.random()*res.body.drinks.length);
+      res.body.drinks[randomIndex].numLikes.should.equal(popular[randomIndex+10].likes.length)
+      done();
+    })
+  })
+
+  it('get user latest submissions', (done) => {
     server.get("/api/drink/list")
     .send({submitterId: 4})
     .end((err, res) => {
       res.type.should.equal('application/json');
       const filtered = res.body.drinks.filter((d) => { return d.submitterId === "4"})
       res.body.drinks.length.should.equal(filtered.length)
+      done();
+    })
+  })
+
+  it('get user popular submissions', (done) => {
+    server.get("/api/drink/list")
+    .send({submitterId: 2, sort: "popular"})
+    .end((err, res) => {
+      res.type.should.equal('application/json');
+      const popular = res.body.drinks
+                        .filter((d) => { return d.submitterId === "2"})
+                        .sort((a, b) => {return b.likes.length - a.likes.length})
+      res.body.drinks.length.should.equal(popular.length)
+      const randomIndex = Math.floor(Math.random()*popular.length);
+      res.body.drinks[randomIndex].numLikes.should.equal(popular[randomIndex].likes.length)
+      res.body.total.should.equal(popular.length);
+      done();
+    })
+  })
+
+  it('out of submissions', (done) => {
+    server.get("/api/drink/list")
+    .send({submitterId: 2, sort: "popular", start: 20})
+    .end((err, res) => {
+      res.type.should.equal('application/json');
+      res.body.drinks.length.should.equal(0);
       done();
     })
   })

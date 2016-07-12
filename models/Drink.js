@@ -13,8 +13,8 @@ const drinkSchema = new Schema({
   submitterId: String,
   submitterName: String,
   likes: [String],
-  createdAt: Date,
-  numLikes: Number
+  numLikes: Number,
+  createdAt: Date
 }, schemaOptions);
 
 drinkSchema.pre('save', function(next){

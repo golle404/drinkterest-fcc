@@ -65,47 +65,17 @@ export function queryDrinks(req, res, next){
   }else{
     sortBy.createdAt = -1;
   }
-  Drink.find(query).sort(sortBy).skip(start).limit(20).exec((err, doc) => {
+  Drink.find(query).count((err, total) => {
     if(err){
       return res.json({error: err})
-    }
-    res.json({drinks: doc});
-  })
-  /*if(req.body.sort === "popular"){
-    Drink.aggregate()
-      .project({
-        name: 1,
-        url: 1,
-        image: 1,
-        likes: 1,
-        submitterId: 1,
-        submitterName: 1,
-        numLikes: {
-          $size: "$likes"
-        }
-      })
-      .sort({numLikes: -1})
-      .skip(start)
-      .limit(20)
-      .exec((err, doc) => {
-        if(err){
-          return res.json({error: err})
-        }
-        res.json({drinks: doc});
-      })
-  }else{
-    let query = {}
-    if(req.body.submitterId){
-      query.submitterId = req.body.submitterId;
     }
     Drink.find(query).sort(sortBy).skip(start).limit(20).exec((err, doc) => {
       if(err){
         return res.json({error: err})
       }
-      res.json({drinks: doc});
+      res.json({drinks: doc, total: total, start: start});
     })
-  }*/
-
+  })
 }
 
 
@@ -123,7 +93,7 @@ export function loadDummyData(req, res, next){
           likes: [],
           submitterId: id % 7,
           submitterName: "dummy__" + (id % 7),
-          createdAt: id
+          createdAt: child.data.created
         }
         for(let i=0; i<child.data.score; i++){
           d.likes.push("dummy_like_" + i);
