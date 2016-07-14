@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import {OrderedMap, Map, List, fromJS, toOderedMap} from 'immutable';
+import {OrderedMap, Map, fromJS, toOderedMap} from 'immutable';
 import * as actionTypes from '../actions/actionTypes';
 
 const drinksInfo = (state = Map(), action) => {

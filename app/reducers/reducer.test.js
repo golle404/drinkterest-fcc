@@ -2,24 +2,11 @@ import * as actionTypes from '../actions/actionTypes';
 import userReducer from './userReducer';
 import drinkReducer from './drinkReducer';
 import should from 'should';
-import {Map, List, fromJS, toJS, toOrderedMap} from 'immutable';
+import {Map, fromJS, toJS, toOrderedMap} from 'immutable';
 import { Schema, arrayOf, normalize } from 'normalizr';
 
-const testState = {
-  total: 25,
-  drinks: [
-    {id: 0, name: "beer", url: "http://beer.com", likes: [1,2,3], numLikes: 3},
-    {id: 1, name: "vodka", url: "http://vodka.com", likes: [3,4], numLikes: 2},
-    {id: 2, name: "whiskey", url: "http://whiskey.com", likes: [], numLikes: 0},
-    {id: 3, name: "cider", url: "http://cider.com", likes: [2,3], numLikes: 2}
-  ]
-}
-
 const drinkSchema = new Schema("drinks");
-const serialize = (drinks) => {
-  const serialized = normalize(drinks, arrayOf(drinkSchema))
-  return {data: serialized.entities.drinks, ids: serialized.result}
-}
+
 describe("User Reducer", () => {
 
   it('handles SET_USER', () => {
@@ -28,14 +15,25 @@ describe("User Reducer", () => {
       type: actionTypes.SET_USER,
       user: {
         username: "admin",
-        id: 123
+        id: 123,
+        auth: true
       }
     }
     const nextState = userReducer(state, action);
-    nextState.get("username").should.equal("admin");
-    nextState.get("id").should.equal(123);
-    state.has("username").should.equal(false);
-    state.has("id").should.equal(false);
+    nextState.toJS().should.deepEqual(action.user);
+  })
+
+  it('handles REMOVE_USER', () => {
+    const state = fromJS({
+                    username: "admin",
+                    id: 123,
+                    auth: true
+                  });
+    const action = {
+      type: actionTypes.REMOVE_USER,
+    }
+    const nextState = userReducer(state, action);
+    nextState.toJS().should.deepEqual({});
   })
 
 })
