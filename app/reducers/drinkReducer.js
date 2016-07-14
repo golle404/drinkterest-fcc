@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import {Map, List, fromJS} from 'immutable';
+import {OrderedMap, Map, List, fromJS, toOderedMap} from 'immutable';
 import * as actionTypes from '../actions/actionTypes';
 
 const drinksInfo = (state = Map(), action) => {
@@ -7,47 +7,27 @@ const drinksInfo = (state = Map(), action) => {
     case actionTypes.SET_DRINKS:
     case actionTypes.APPEND_DRINKS:
       return fromJS(action.info);
-    case actionTypes.UPDATE_DRINK:
     default:
       return state;
   }
 }
 
-const drinksList = (state = Map(), action) => {
+const drinksList = (state = OrderedMap(), action) => {
   switch (action.type) {
     case actionTypes.SET_DRINKS:
-      return fromJS(action.drinks.data);
+      return fromJS(action.drinks).toOrderedMap();
     case actionTypes.APPEND_DRINKS:
-    //console.log(action.drinks.entities);
-    //console.log(state);
-    const newState = Object.assign({}, state.drinks, action.drinks.entities.drinks)
-    //console.log(newState);
-      return newState
+      return state.merge(action.drinks)
     case actionTypes.UPDATE_DRINK:
+      return state.merge(action.drink)
     default:
       return state;
   }
 }
-
-const drinksIDs = (state = List(), action) => {
-  switch (action.type) {
-    case actionTypes.SET_DRINKS:
-      return fromJS(action.drinks.ids);
-    case actionTypes.APPEND_DRINKS:
-      return state.concat(action.drinks.result)
-    case actionTypes.UPDATE_DRINK:
-    default:
-      return state;
-  }
-}
-
 
 const drinkReducer = combineReducers({
   info: drinksInfo,
-  drinks: combineReducers({
-    data: drinksList,
-    ids: drinksIDs
-  })
+  drinks: drinksList
 })
 
 export default drinkReducer
