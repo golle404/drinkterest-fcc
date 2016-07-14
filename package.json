@@ -32,8 +32,10 @@
     "jade": "^1.11.0",
     "mongoose": "^4.5.3",
     "node-fetch": "^1.5.3",
+    "normalizr": "^2.1.0",
     "passport": "^0.3.2",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "redux": "^3.5.2"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
