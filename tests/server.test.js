@@ -132,12 +132,13 @@ describe('Server API test', function () {
     .send(drink)
     .end((err, res) => {
       res.type.should.equal('application/json');
-      res.body.name.should.equal(drink.name);
-      res.body.url.should.equal(drink.url);
-      res.body.submitterName.should.equal(profile.username);
-      res.body.likes.length.should.equal(1);
-      res.body.likes[0].should.equal(res.body.submitterId);
-      drinkId = res.body._id;
+      const resDrink = res.body.drink;
+      resDrink.name.should.equal(drink.name);
+      resDrink.url.should.equal(drink.url);
+      resDrink.submitterName.should.equal(profile.username);
+      resDrink.likes.length.should.equal(1);
+      resDrink.likes[0].should.equal(resDrink.submitterId);
+      drinkId = resDrink._id;
       done();
     })
 
@@ -147,7 +148,7 @@ describe('Server API test', function () {
     server.put("/api/like/" + drinkId)
     .end((err, res) => {
       res.type.should.equal('application/json');
-      res.body.likes.length.should.equal(0);
+      res.body.drink.likes.length.should.equal(0);
       done();
     })
 
@@ -158,9 +159,9 @@ describe('Server API test', function () {
     .send(newDrink)
     .end((err, res) => {
       res.type.should.equal('application/json');
-      res.body.name.should.equal(newDrink.name);
-      res.body.url.should.equal(newDrink.url);
-      res.body.submitterName.should.equal(profile.username);
+      res.body.drink.name.should.equal(newDrink.name);
+      res.body.drink.url.should.equal(newDrink.url);
+      res.body.drink.submitterName.should.equal(profile.username);
       done();
     })
 
@@ -193,11 +194,11 @@ describe('Server API test', function () {
       const latest = dummyData.sort((a, b) => {
         return b.createdAt - a.createdAt;
       });
-      const randomIndex = Math.floor(Math.random()*res.body.drinks.length);
+      const randomIndex = Math.floor(Math.random() * res.body.drinks.length);
       const bd = new Date(res.body.drinks[randomIndex].createdAt).toString();
       const fd = new Date(latest[randomIndex].createdAt).toString();
       bd.should.equal(fd)
-      res.body.total.should.equal(dummyData.length);
+      res.body.info.total.should.equal(dummyData.length);
       done();
     })
   })
@@ -250,7 +251,7 @@ describe('Server API test', function () {
       res.body.drinks.length.should.equal(popular.length)
       const randomIndex = Math.floor(Math.random()*popular.length);
       res.body.drinks[randomIndex].numLikes.should.equal(popular[randomIndex].likes.length)
-      res.body.total.should.equal(popular.length);
+      res.body.info.total.should.equal(popular.length);
       done();
     })
   })

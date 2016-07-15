@@ -11,7 +11,7 @@ export function addDrink(req, res, next){
     if(err){
       return res.json({error: err})
     }
-    res.json(drink);
+    res.json({drink: drink});
   })
 }
 
@@ -30,7 +30,7 @@ export function likeDrink(req, res, next){
       if(err){
         return res.json({error: err})
       }
-      res.json(drink)
+      res.json({drink: drink})
     })
   })
 }
@@ -40,7 +40,7 @@ export function editDrink(req, res, next){
     if(err){
       return res.json({error: err})
     }
-    res.json(drink);
+    res.json({drink: drink});
   })
 }
 
@@ -73,7 +73,7 @@ export function queryDrinks(req, res, next){
       if(err){
         return res.json({error: err})
       }
-      res.json({drinks: doc, total: total, start: start});
+      res.json({drinks: doc, info: {total: total}});
     })
   })
 }
