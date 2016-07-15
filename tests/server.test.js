@@ -36,25 +36,23 @@ let userId, drinkId, dummyData;
 
 describe('Server API test', function () {
 
-  it('responds to / and renders template', (done) => {
+  it('responds to /', (done) => {
     server.get("/")
     .end((err, res) => {
       res.status.should.equal(200);
       res.type.should.equal('text/html');
-      const html = jade.renderFile('./views/index.jade');
-      res.text.should.equal(html);
       done();
     });
   })
 
-  it('returns 404', (done) => {
+  /*it('returns 404', (done) => {
     server.get("/undef")
     .expect(404)
     .end((err, res) => {
       res.status.should.equal(404);
       done();
     });
-  })
+  })*/
 
   it('registers account', (done) => {
     server.post("/auth/register")

@@ -15,7 +15,7 @@ passportConfig(passport);
 import logger from 'morgan';
 
 import router from './api/router';
-
+import {getDrinkList} from './controllers/drinkCtrl'
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackConfig from './webpack.config';
@@ -60,18 +60,13 @@ app.get('/*', function (req, res) {
       username: "admin",
       auth: false
     },
-    drinks: {
-      drinks: [
-        {id: 0, name: "beer"},
-        {id: 1, name: "wine"},
-        {id: 2, name: "whiskey"}
-      ],
-      info: {
-        total: 25
-      }
-    }
+    drinks: {}
   }
-  res.status(200).render('index',{initialState: initialState});
+  getDrinkList().then((response) => {
+    initialState.drinks = response
+    res.status(200).render('index',{initialState: initialState});
+  })
+
 });
 
 app.listen(serverConfig.PORT, () => {

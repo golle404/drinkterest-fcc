@@ -10,7 +10,8 @@ export default function configureStore(initState){
 
 const drinkSchema = new Schema("drinks");
 function toImmutableState(state){
-  state.drinks.drinks = fromJS(normalize(state.drinks.drinks, arrayOf(drinkSchema)).entities.drinks).toOrderedMap();
+  const normalized = normalize(state.drinks.drinks, arrayOf(drinkSchema)).entities.drinks || {};
+  state.drinks.drinks = fromJS(normalized).toOrderedMap();
   state.drinks.info = fromJS(state.drinks.info)
   state.user = fromJS(state.user)
   return state;

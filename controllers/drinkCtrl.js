@@ -65,7 +65,12 @@ export function queryDrinks(req, res, next){
   }else{
     sortBy.createdAt = -1;
   }
-  Drink.find(query).count((err, total) => {
+  getDrinkList(query, sortBy, start).then((response) => {
+    res.json(response);
+  }).catch((err) => {
+    res.json({error: err})
+  })
+  /*Drink.find(query).count((err, total) => {
     if(err){
       return res.json({error: err})
     }
@@ -75,10 +80,24 @@ export function queryDrinks(req, res, next){
       }
       res.json({drinks: doc, info: {total: total}});
     })
-  })
+  })*/
 }
 
-
+export function getDrinkList(query = {}, sortBy = {createdAt: -1}, start = 0){
+  return new Promise((resolve, reject) => {
+    Drink.find(query).count((err, total) => {
+      if(err){
+        reject({error: err})
+      }
+      Drink.find(query).sort(sortBy).skip(start).limit(20).exec((err, doc) => {
+        if(err){
+          reject({error: err})
+        }
+        resolve({drinks: doc, info: {total: total}});
+      })
+    })
+  })
+}
 ///////////////   for testing only - loads dummmy data from reddit  /////////////////
 export function loadDummyData(req, res, next){
   const url = "https://www.reddit.com/r/drinks/search.json?q=site%3Aimgur.com&restrict_sr=on&sort=relevance&t=all";
