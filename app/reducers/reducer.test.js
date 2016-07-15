@@ -84,7 +84,6 @@ describe("Drink Reducer", () => {
     state.drinks = fromJS(normalize(state.drinks, arrayOf(drinkSchema)).entities.drinks).toOrderedMap();
     action.drinks = normalize(action.drinks, arrayOf(drinkSchema)).entities.drinks
     const nextState = drinkReducer(state, action);
-
     nextState.drinks.toJS().should.deepEqual(action.drinks)
     //immutability check
     action.drinks = {}

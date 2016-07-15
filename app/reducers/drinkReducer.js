@@ -4,8 +4,8 @@ import * as actionTypes from '../actions/actionTypes';
 
 const drinksInfo = (state = Map(), action) => {
   switch (action.type) {
-    case actionTypes.SET_DRINKS:
-    case actionTypes.APPEND_DRINKS:
+    case actionTypes.SET_DRINKS,
+    actionTypes.APPEND_DRINKS:
       return fromJS(action.info);
     default:
       return state;

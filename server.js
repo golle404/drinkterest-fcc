@@ -16,8 +16,18 @@ import logger from 'morgan';
 
 import router from './api/router';
 
-const app = express();
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackConfig from './webpack.config';
 
+const app = express();
+////////////  webpack config  //////////////
+let compiler = webpack(webpackConfig);
+app.use(webpackDevMiddleware(compiler, {
+  noInfo: true,
+  publicPath: webpackConfig.output.publicPath
+}))
+///////////////////////////////////////////
 app.use(logger("dev"));
 /////////  connect database  //////////////
 mongoose.connect(serverConfig.MONGO_PATH);
@@ -44,8 +54,24 @@ app.set('view engine', 'jade');
 ////////  router  ///////////////////////
 app.use('/', router);
 
-app.get('/', function (req, res) {
-  res.status(200).render('index');
+app.get('/*', function (req, res) {
+  const initialState = {
+    user: {
+      username: "admin",
+      auth: false
+    },
+    drinks: {
+      drinks: [
+        {id: 0, name: "beer"},
+        {id: 1, name: "wine"},
+        {id: 2, name: "whiskey"}
+      ],
+      info: {
+        total: 25
+      }
+    }
+  }
+  res.status(200).render('index',{initialState: initialState});
 });
 
 app.listen(serverConfig.PORT, () => {
