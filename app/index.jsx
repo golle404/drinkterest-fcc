@@ -5,6 +5,9 @@ import routes from './routes';
 
 import configureStore from './store/configureStore';
 
+
+import './../style/style.scss';
+
 const store = configureStore(window.INITIAL_STATE);
 
 render(<Router history={browserHistory} routes={routes}/>, document.getElementById('app'))

@@ -22,7 +22,9 @@ var config = {
   ],
   module: {
     loaders: [
-      {test: /(\.jsx|\.js)$/, loaders: ['babel'], exclude: /node_modules/}
+      {test: /(\.jsx|\.js)$/, loaders: ['babel'], exclude: /node_modules/},
+      {test: /\.ico$/, loader: 'file-loader?name=[name].[ext]'},
+      {test: /(\.css|\.scss)$/, loaders: ['style', 'css?sourceMap', 'sass?sourceMap']}
     ]
   }
 }
