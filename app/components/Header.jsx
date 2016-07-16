@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 const Header = (props) => {
   return (
-    <nav>Header</nav>
+    <header>Header</header>
   )
 }
 

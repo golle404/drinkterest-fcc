@@ -56,7 +56,7 @@ app.set('view engine', 'jade');
 ////////  router  ///////////////////////
 app.use('/', router);
 
-
+/////////// ssr  ///////////////////////
 import configureStore from './app/store/configureStore';
 import {createElement} from 'react';
 import {renderToString} from 'react-dom/server';
@@ -64,17 +64,14 @@ import App from './app/components/App';
 
 app.get('/*', function (req, res) {
   const initialState = {
-    user: {
-      username: "admin",
-      auth: false
-    },
+    user: {},
     drinks: {}
   }
 
   getDrinkList().then((resolve) => {
     initialState.drinks = resolve;
-    const store = configureStore(initialState);
-    const html = renderToString(createElement(App, {data: store.getState()}));
+    //const store = configureStore(initialState);
+    //const html = renderToString(createElement(App, {data: store.getState()}));
     //console.log(store.getState());
     res.status(200).render('index', {html: "", initialState: initialState});
   },

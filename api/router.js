@@ -15,7 +15,8 @@ router.post('/api/dummy', drinkCtrl.loadDummyData);
 router.delete('/api/dummy', drinkCtrl.deleteDummyData);
 
 ////////// AUTH ROUTES /////////////
-router.post('/auth/register', (req, res, next) => {
+router.post('/auth/local', userCtrl.localAuth);
+/*router.post('/auth/register', (req, res, next) => {
   passport.authenticate('local-register', (err, user) => {
     if(err){
       return res.json({error: err})
@@ -47,7 +48,7 @@ router.post('/auth/login', (req, res, next) => {
       })
     }
   })(req, res, next);
-})
+})*/
 
 router.delete('/auth', isLoggedIn, userCtrl.deleteUser);
 router.post('/auth/logout', (req, res) => {

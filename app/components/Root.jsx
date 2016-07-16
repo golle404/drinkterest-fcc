@@ -5,9 +5,11 @@ import Footer from './Footer';
 class Root extends React.Component {
   render () {
     return (
-      <div>
+      <div className="root">
         <Header />
-          {this.props.children}
+          <div className="main">
+            {this.props.children}
+          </div>
         <Footer />
       </div>
     )

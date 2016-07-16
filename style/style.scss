@@ -1,3 +1,18 @@
-body{
-  background-color: #ccc;
+@import './../node_modules/reset-css/_reset.scss';
+.root{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.main{
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding-top: 2em;
+}
+header, footer{
+  background-color: #000;
+  color: #fff;
+  min-height: 2em;
 }

@@ -43,7 +43,7 @@ describe('Server API test', function () {
       res.type.should.equal('text/html');
       done();
     });
-  })
+  }).timeout(5000)
 
   /*it('returns 404', (done) => {
     server.get("/undef")
@@ -55,7 +55,8 @@ describe('Server API test', function () {
   })*/
 
   it('registers account', (done) => {
-    server.post("/auth/register")
+    profile.register = true;
+    server.post("/auth/local")
     .send(profile)
     .end((err, res) => {
       res.type.should.equal('application/json');
@@ -74,7 +75,8 @@ describe('Server API test', function () {
   })
 
   it('does not register account if username exists', (done) => {
-    server.post("/auth/register")
+    profile.register = true;
+    server.post("/auth/local")
     .send(profile)
     .end((err, res) => {
       res.type.should.equal('application/json');
@@ -96,7 +98,8 @@ describe('Server API test', function () {
   })
 
   it('does not login with wrong password', (done) => {
-    server.post("/auth/login")
+    wrongPassword.register = false;
+    server.post("/auth/local")
     .send(wrongPassword)
     .end((err, res) => {
       res.type.should.equal('application/json');
@@ -107,7 +110,8 @@ describe('Server API test', function () {
   });
 
   it('logs in', (done) => {
-    server.post("/auth/login")
+    profile.register = false;
+    server.post("/auth/local")
     .send(profile)
     .end((err, res) => {
       res.type.should.equal('application/json');
@@ -192,8 +196,8 @@ describe('Server API test', function () {
       const latest = dummyData.sort((a, b) => {
         return b.createdAt - a.createdAt;
       });
-      const randomIndex = Math.floor(Math.random() * res.body.drinks.length);
-      const bd = new Date(res.body.drinks[randomIndex].createdAt).toString();
+      const randomIndex = Math.floor(Math.random() * res.body.data.length);
+      const bd = new Date(res.body.data[randomIndex].createdAt).toString();
       const fd = new Date(latest[randomIndex].createdAt).toString();
       bd.should.equal(fd)
       res.body.info.total.should.equal(dummyData.length);
@@ -206,10 +210,10 @@ describe('Server API test', function () {
     .send({sort: "popular"})
     .end((err, res) => {
       res.type.should.equal('application/json');
-      res.body.drinks.length.should.equal(20)
+      res.body.data.length.should.equal(20)
       const popular = dummyData.sort((a, b) => { return b.likes.length - a.likes.length });
-      const randomIndex = Math.floor(Math.random()*res.body.drinks.length);
-      res.body.drinks[randomIndex].numLikes.should.equal(popular[randomIndex].likes.length)
+      const randomIndex = Math.floor(Math.random()*res.body.data.length);
+      res.body.data[randomIndex].numLikes.should.equal(popular[randomIndex].likes.length)
       done();
     })
   })
@@ -219,10 +223,10 @@ describe('Server API test', function () {
     .send({sort: "popular", start: 10})
     .end((err, res) => {
       res.type.should.equal('application/json');
-      res.body.drinks.length.should.equal(dummyData.length - 10)
+      res.body.data.length.should.equal(dummyData.length - 10)
       const popular = dummyData.sort((a, b) => { return b.likes.length - a.likes.length });
-      const randomIndex = Math.floor(Math.random()*res.body.drinks.length);
-      res.body.drinks[randomIndex].numLikes.should.equal(popular[randomIndex+10].likes.length)
+      const randomIndex = Math.floor(Math.random()*res.body.data.length);
+      res.body.data[randomIndex].numLikes.should.equal(popular[randomIndex+10].likes.length)
       done();
     })
   })
@@ -232,8 +236,8 @@ describe('Server API test', function () {
     .send({submitterId: 4})
     .end((err, res) => {
       res.type.should.equal('application/json');
-      const filtered = res.body.drinks.filter((d) => { return d.submitterId === "4"})
-      res.body.drinks.length.should.equal(filtered.length)
+      const filtered = res.body.data.filter((d) => { return d.submitterId === "4"})
+      res.body.data.length.should.equal(filtered.length)
       done();
     })
   })
@@ -243,12 +247,12 @@ describe('Server API test', function () {
     .send({submitterId: 2, sort: "popular"})
     .end((err, res) => {
       res.type.should.equal('application/json');
-      const popular = res.body.drinks
+      const popular = res.body.data
                         .filter((d) => { return d.submitterId === "2"})
                         .sort((a, b) => {return b.likes.length - a.likes.length})
-      res.body.drinks.length.should.equal(popular.length)
+      res.body.data.length.should.equal(popular.length)
       const randomIndex = Math.floor(Math.random()*popular.length);
-      res.body.drinks[randomIndex].numLikes.should.equal(popular[randomIndex].likes.length)
+      res.body.data[randomIndex].numLikes.should.equal(popular[randomIndex].likes.length)
       res.body.info.total.should.equal(popular.length);
       done();
     })
@@ -259,7 +263,7 @@ describe('Server API test', function () {
     .send({submitterId: 2, sort: "popular", start: 20})
     .end((err, res) => {
       res.type.should.equal('application/json');
-      res.body.drinks.length.should.equal(0);
+      res.body.data.length.should.equal(0);
       done();
     })
   })

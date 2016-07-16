@@ -65,11 +65,12 @@ export function queryDrinks(req, res, next){
   }else{
     sortBy.createdAt = -1;
   }
-  getDrinkList(query, sortBy, start).then((response) => {
-    res.json(response);
-  }).catch((err) => {
-    res.json({error: err})
-  })
+  getDrinkList(query, sortBy, start)
+    .then((response) => {
+      res.json(response);
+    }).catch((err) => {
+      res.json({error: err})
+    })
 }
 
 export function getDrinkList(query = {}, sortBy = {createdAt: -1}, start = 0){
