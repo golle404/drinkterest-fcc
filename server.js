@@ -74,7 +74,7 @@ app.get('/*', function (req, res) {
     const store = configureStore(initialState);
     const html = renderToString(createElement(App, {data: store.getState()}));
     //console.log(store.getState());
-    res.status(200).render('index', {html: html, initialState: initialState});
+    res.status(200).render('index', {html: "", initialState: initialState});
   },
   (reject) => {
     res.json(reject)
