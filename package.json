@@ -10,6 +10,7 @@
   "babel": {
     "presets": [
       "es2015",
+      "react",
       "stage-0"
     ]
   },
@@ -35,6 +36,9 @@
     "normalizr": "^2.1.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1",
+    "react-router": "^2.5.2",
     "redux": "^3.5.2"
   },
   "devDependencies": {

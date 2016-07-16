@@ -8,6 +8,9 @@ var config = {
     filename: 'bundle.js',
     publicPath: '/js'
   },
+  resolve: {
+    extensions: ['', '.js', '.jsx']
+  },
   module: {
     loaders: [
       {test: /(\.jsx|\.js)$/, loaders: ['babel'], exclude: /node_modules/}

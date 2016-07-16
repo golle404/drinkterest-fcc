@@ -5,7 +5,7 @@ import should from 'should';
 import {Map, fromJS, toJS, toOrderedMap} from 'immutable';
 import { Schema, arrayOf, normalize } from 'normalizr';
 
-const drinkSchema = new Schema("drinks");
+const drinkSchema = new Schema("data");
 
 describe("User Reducer", () => {
 
@@ -45,7 +45,7 @@ describe("Drink Reducer", () => {
     const action = {
       type: actionTypes.SET_DRINKS,
       info: {total: 25},
-      drinks: [
+      data: [
         {id: 0, name: "beer", url: "http://beer.com", likes: [1,2,3], numLikes: 3},
         {id: 1, name: "vodka", url: "http://vodka.com", likes: [3,4], numLikes: 2},
         {id: 2, name: "whiskey", url: "http://whiskey.com", likes: [], numLikes: 0},
@@ -53,20 +53,20 @@ describe("Drink Reducer", () => {
       ]
     }
 
-    action.drinks = normalize(action.drinks, arrayOf(drinkSchema)).entities.drinks
+    action.data = normalize(action.data, arrayOf(drinkSchema)).entities.data
     const nextState = drinkReducer(state, action);
-    nextState.drinks.toJS().should.deepEqual(action.drinks);
+    nextState.data.toJS().should.deepEqual(action.data);
     //immutability check
     should.not.exist(state.info)
-    should.not.exist(state.drinks)
-    action.drinks = {}
-    nextState.drinks.toJS().should.not.deepEqual(action.drinks);
+    should.not.exist(state.data)
+    action.data = {}
+    nextState.data.toJS().should.not.deepEqual(action.data);
   })
 
   it('handles SET_DRINKS with existing state', () => {
     const state = {
       info: {total: 52},
-      drinks: [
+      data: [
         {id: 0, name: "lager", url: "http://lager.com", likes: [1,2,3], numLikes: 3},
         {id: 3, name: "wine", url: "http://wine.com", likes: [2,3,2,5,8], numLikes: 5}
       ]
@@ -74,26 +74,26 @@ describe("Drink Reducer", () => {
     const action = {
       type: actionTypes.SET_DRINKS,
       info: {total: 25},
-      drinks: [
+      data: [
         {id: 0, name: "beer", url: "http://beer.com", likes: [1,2,3], numLikes: 3},
         {id: 1, name: "vodka", url: "http://vodka.com", likes: [3,4], numLikes: 2},
         {id: 2, name: "whiskey", url: "http://whiskey.com", likes: [], numLikes: 0},
         {id: 3, name: "cider", url: "http://cider.com", likes: [2,3], numLikes: 2}
       ]
     }
-    state.drinks = fromJS(normalize(state.drinks, arrayOf(drinkSchema)).entities.drinks).toOrderedMap();
-    action.drinks = normalize(action.drinks, arrayOf(drinkSchema)).entities.drinks
+    state.data = fromJS(normalize(state.data, arrayOf(drinkSchema)).entities.data).toOrderedMap();
+    action.data = normalize(action.data, arrayOf(drinkSchema)).entities.data
     const nextState = drinkReducer(state, action);
-    nextState.drinks.toJS().should.deepEqual(action.drinks)
+    nextState.data.toJS().should.deepEqual(action.data)
     //immutability check
-    action.drinks = {}
-    nextState.drinks.toJS().should.not.deepEqual(action.drinks);
+    action.data = {}
+    nextState.data.toJS().should.not.deepEqual(action.data);
   })
 
   it('handles APPEND_DRINKS', () => {
     const state = {
       info: {total: 52},
-      drinks: [
+      data: [
         {id: 0, name: "lager", url: "http://lager.com", likes: [1,2,3], numLikes: 3},
         {id: 4, name: "wine", url: "http://wine.com", likes: [2,3,2,5,8], numLikes: 5}
       ]
@@ -101,29 +101,29 @@ describe("Drink Reducer", () => {
     const action = {
       type: actionTypes.APPEND_DRINKS,
       info: {total: 25},
-      drinks: [
+      data: [
         {id: 0, name: "beer", url: "http://beer.com", likes: [1,2,3], numLikes: 3},
         {id: 1, name: "vodka", url: "http://vodka.com", likes: [3,4], numLikes: 2},
         {id: 2, name: "whiskey", url: "http://whiskey.com", likes: [], numLikes: 0},
         {id: 3, name: "cider", url: "http://cider.com", likes: [2,3], numLikes: 2}
       ]
     }
-    state.drinks = fromJS(normalize(state.drinks, arrayOf(drinkSchema)).entities.drinks).toOrderedMap();
-    action.drinks = normalize(action.drinks, arrayOf(drinkSchema)).entities.drinks
+    state.data = fromJS(normalize(state.data, arrayOf(drinkSchema)).entities.data).toOrderedMap();
+    action.data = normalize(action.data, arrayOf(drinkSchema)).entities.data
     const nextState = drinkReducer(state, action);
-    nextState.drinks.toJS()["0"].should.deepEqual(action.drinks["0"])
-    nextState.drinks.toJS()["4"].should.deepEqual(state.drinks.toJS()["4"])
+    nextState.data.toJS()["0"].should.deepEqual(action.data["0"])
+    nextState.data.toJS()["4"].should.deepEqual(state.data.toJS()["4"])
     //immutability check
-    action.drinks = {}
-    state.drinks = {}
-    nextState.drinks.toJS()["0"].should.not.deepEqual(action.drinks["0"])
-    nextState.drinks.toJS()["4"].should.not.deepEqual(state.drinks["4"])
+    action.data = {}
+    state.data = {}
+    nextState.data.toJS()["0"].should.not.deepEqual(action.data["0"])
+    nextState.data.toJS()["4"].should.not.deepEqual(state.data["4"])
   })
 
   it('handles UPDATE_DRINKS', () => {
     const state = {
       info: {total: 52},
-      drinks: [
+      data: [
         {id: 0, name: "beer", url: "http://beer.com", likes: [1,2,3], numLikes: 3},
         {id: 1, name: "vodka", url: "http://vodka.com", likes: [3,4], numLikes: 2},
         {id: 2, name: "whiskey", url: "http://whiskey.com", likes: [], numLikes: 0},
@@ -134,10 +134,10 @@ describe("Drink Reducer", () => {
       type: actionTypes.UPDATE_DRINK,
       drink: {id: 2, name: "water", url: "http://water.com", likes: [10,20], numLikes: 2}
     }
-    state.drinks = fromJS(normalize(state.drinks, arrayOf(drinkSchema)).entities.drinks).toOrderedMap();
-    action.drink = normalize(action.drink, drinkSchema).entities.drinks
+    state.data = fromJS(normalize(state.data, arrayOf(drinkSchema)).entities.data).toOrderedMap();
+    action.drink = normalize(action.drink, drinkSchema).entities.data
     const nextState = drinkReducer(state, action);
-    nextState.drinks.toJS()["2"].should.deepEqual(action.drink["2"])
+    nextState.data.toJS()["2"].should.deepEqual(action.drink["2"])
   })
 
 })

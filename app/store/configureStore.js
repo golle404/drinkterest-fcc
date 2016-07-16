@@ -8,11 +8,12 @@ export default function configureStore(initState){
   return createStore(rootReducer, toImmutableState(initState));
 }
 
-const drinkSchema = new Schema("drinks");
+const drinkSchema = new Schema("data", { idAttribute: '_id' });
+
 function toImmutableState(state){
-  const normalized = normalize(state.drinks.drinks, arrayOf(drinkSchema)).entities.drinks || {};
-  state.drinks.drinks = fromJS(normalized).toOrderedMap();
-  state.drinks.info = fromJS(state.drinks.info)
-  state.user = fromJS(state.user)
-  return state;
+  const normalizedDrinks = normalize(state.drinks.data, arrayOf(drinkSchema)).entities.data
+  const immutableDrinks = fromJS(normalizedDrinks).toOrderedMap();
+  const immutableInfo = fromJS(state.drinks.info)
+  const immutableUser = fromJS(state.user)
+  return {user: immutableUser, drinks: {data: immutableDrinks, info: immutableInfo}};
 }

@@ -15,9 +15,9 @@ const drinksInfo = (state = Map(), action) => {
 const drinksList = (state = OrderedMap(), action) => {
   switch (action.type) {
     case actionTypes.SET_DRINKS:
-      return fromJS(action.drinks).toOrderedMap();
+      return fromJS(action.data).toOrderedMap();
     case actionTypes.APPEND_DRINKS:
-      return state.merge(action.drinks)
+      return state.merge(action.data)
     case actionTypes.UPDATE_DRINK:
       return state.merge(action.drink)
     default:
@@ -27,7 +27,7 @@ const drinksList = (state = OrderedMap(), action) => {
 
 const drinkReducer = combineReducers({
   info: drinksInfo,
-  drinks: drinksList
+  data: drinksList
 })
 
 export default drinkReducer

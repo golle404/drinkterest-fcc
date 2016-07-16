@@ -70,17 +70,6 @@ export function queryDrinks(req, res, next){
   }).catch((err) => {
     res.json({error: err})
   })
-  /*Drink.find(query).count((err, total) => {
-    if(err){
-      return res.json({error: err})
-    }
-    Drink.find(query).sort(sortBy).skip(start).limit(20).exec((err, doc) => {
-      if(err){
-        return res.json({error: err})
-      }
-      res.json({drinks: doc, info: {total: total}});
-    })
-  })*/
 }
 
 export function getDrinkList(query = {}, sortBy = {createdAt: -1}, start = 0){
@@ -89,11 +78,11 @@ export function getDrinkList(query = {}, sortBy = {createdAt: -1}, start = 0){
       if(err){
         reject({error: err})
       }
-      Drink.find(query).sort(sortBy).skip(start).limit(20).exec((err, doc) => {
+      Drink.find(query).sort(sortBy).skip(start).limit(20).lean().exec((err, doc) => {
         if(err){
           reject({error: err})
         }
-        resolve({drinks: doc, info: {total: total}});
+        resolve({data: doc, info: {total: total}});
       })
     })
   })
