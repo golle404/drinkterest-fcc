@@ -18,6 +18,7 @@ import router from './api/router';
 import {getDrinkList} from './controllers/drinkCtrl'
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackConfig from './webpack.config';
 
 const app = express();
@@ -27,6 +28,7 @@ app.use(webpackDevMiddleware(compiler, {
   noInfo: true,
   publicPath: webpackConfig.output.publicPath
 }))
+app.use(webpackHotMiddleware(compiler));
 ///////////////////////////////////////////
 app.use(logger("dev"));
 /////////  connect database  //////////////
