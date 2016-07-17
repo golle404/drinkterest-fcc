@@ -9,28 +9,29 @@ const drinkSchema = new Schema("data");
 
 describe("User Reducer", () => {
 
-  it('handles SET_USER', () => {
+  it('handles USER_AUTH_SUCCESS', () => {
     const state = Map();
     const action = {
-      type: actionTypes.SET_USER,
+      type: actionTypes.USER_AUTH_SUCCESS,
       user: {
         username: "admin",
-        id: 123,
-        auth: true
+        id: 123
       }
     }
     const nextState = userReducer(state, action);
-    nextState.toJS().should.deepEqual(action.user);
+    nextState.get("username").should.equal(action.user.username);
+    nextState.get("id").should.equal(action.user.id);
+    nextState.get("auth").should.equal(true);
   })
 
-  it('handles REMOVE_USER', () => {
+  it('handles USER_LOGOUT_SUCCESS', () => {
     const state = fromJS({
                     username: "admin",
                     id: 123,
                     auth: true
                   });
     const action = {
-      type: actionTypes.REMOVE_USER,
+      type: actionTypes.USER_LOGOUT_SUCCESS,
     }
     const nextState = userReducer(state, action);
     nextState.toJS().should.deepEqual({});

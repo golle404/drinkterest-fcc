@@ -63,11 +63,15 @@ import {renderToString} from 'react-dom/server';
 import App from './app/components/App';
 
 app.get('/*', function (req, res) {
-  const initialState = {
+  let initialState = {
     user: {},
     drinks: {}
   }
-
+  if(req.isAuthenticated()){
+    initialState.user.id = req.user._id;
+    initialState.user.username = req.user.local.username;
+    initialState.user.auth = true;
+  }
   getDrinkList().then((resolve) => {
     initialState.drinks = resolve;
     //const store = configureStore(initialState);
