@@ -6,7 +6,7 @@ import DrinksPage from './components/DrinksPage';
 import AuthenticationPage from './components/AuthenticationPage';
 import User from './components/User';
 
-import {drinksListRequest} from './actions/drinksActions';
+import {drinksListRequest, clearDrinks} from './actions/drinksActions';
 
 const routes = (store) => {
 
@@ -14,9 +14,10 @@ const routes = (store) => {
     //console.log(nextState)
     const queryParams = {
       submitterName: nextState.params.user || "",
-      sort: nextState.params.sort || "recent",
+      sort: nextState.params.sort || "recent"
     }
     //console.log(queryParams)
+    store.dispatch(clearDrinks());
     store.dispatch(drinksListRequest(queryParams));
   }
 

@@ -1,4 +1,5 @@
 export const DRINK_LIST_SUCCESS = "DRINK_LIST_SUCCESS";
+export const CLEAR_DRINKS = "CLEAR_DRINKS";
 
 export const APPEND_DRINKS = "APPEND_DRINKS";
 export const UPDATE_DRINK = "UPDATE_DRINK";

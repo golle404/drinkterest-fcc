@@ -4,6 +4,10 @@ export const drinkListSuccess = (drinks) => {
   return { type: actionTypes.DRINK_LIST_SUCCESS, drinks };
 }
 
+export const clearDrinks = () => {
+  return { type: actionTypes.CLEAR_DRINKS};
+}
+
 export const drinksListRequest = (params) => {
   return (dispatch) => {
     return fetch('/api/drink/list', {
@@ -12,6 +16,7 @@ export const drinksListRequest = (params) => {
       body: JSON.stringify(params)
     }).then((response) => {
       if(response.ok){
+        console.log("loaded");
         response.json().then((json) => {
           if(json.error){
             console.log(json.error);

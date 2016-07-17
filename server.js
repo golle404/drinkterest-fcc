@@ -65,7 +65,7 @@ import App from './app/components/App';
 app.get('/*', function (req, res) {
   let initialState = {
     user: {},
-    drinks: {}
+    drinks: {data: {}, info: {}}
   }
   if(req.isAuthenticated()){
     initialState.user.id = req.user._id;
@@ -73,7 +73,7 @@ app.get('/*', function (req, res) {
     initialState.user.auth = true;
   }
   getDrinkList().then((resolve) => {
-    initialState.drinks = resolve;
+    //initialState.drinks = resolve;
     //const store = configureStore(initialState);
     //const html = renderToString(createElement(App, {data: store.getState()}));
     //console.log(store.getState());
