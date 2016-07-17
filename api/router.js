@@ -9,7 +9,7 @@ router.post('/api/drink', isLoggedIn, drinkCtrl.addDrink);
 router.put('/api/like/:id', isLoggedIn, drinkCtrl.likeDrink);
 router.put('/api/drink/:id', isLoggedIn, drinkCtrl.editDrink);
 router.delete('/api/drink/:id', isLoggedIn, drinkCtrl.deleteDrink);
-router.get('/api/drink/list', drinkCtrl.queryDrinks);
+router.post('/api/drink/list', drinkCtrl.queryDrinks);
 // for testing purposis only - loads random data from reddit//
 router.post('/api/dummy', drinkCtrl.loadDummyData);
 router.delete('/api/dummy', drinkCtrl.deleteDummyData);

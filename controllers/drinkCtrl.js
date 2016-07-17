@@ -57,8 +57,8 @@ export function queryDrinks(req, res, next){
   const start = req.body.start || 0;
   let sortBy = {};
   let query = {}
-  if(req.body.submitterId){
-    query.submitterId = req.body.submitterId;
+  if(req.body.submitterName){
+    query.submitterName = req.body.submitterName;
   }
   if(req.body.sort === "popular"){
     sortBy.numLikes = -1;

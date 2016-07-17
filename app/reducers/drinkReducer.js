@@ -3,10 +3,10 @@ import {OrderedMap, Map, fromJS, toOderedMap} from 'immutable';
 import * as actionTypes from '../actions/actionTypes';
 
 const drinksInfo = (state = Map(), action) => {
+
   switch (action.type) {
-    case actionTypes.SET_DRINKS,
-    actionTypes.APPEND_DRINKS:
-      return fromJS(action.info);
+    case actionTypes.DRINK_LIST_SUCCESS:
+      return fromJS(action.drinks.info);
     default:
       return state;
   }
@@ -14,8 +14,8 @@ const drinksInfo = (state = Map(), action) => {
 
 const drinksList = (state = OrderedMap(), action) => {
   switch (action.type) {
-    case actionTypes.SET_DRINKS:
-      return fromJS(action.data).toOrderedMap();
+    case actionTypes.DRINK_LIST_SUCCESS:
+      return fromJS(action.drinks.data).toOrderedMap();
     case actionTypes.APPEND_DRINKS:
       return state.merge(action.data)
     case actionTypes.UPDATE_DRINK:
