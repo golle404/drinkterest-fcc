@@ -1,13 +1,18 @@
 import { combineReducers } from "redux";
-import {OrderedMap, Map, fromJS, toOderedMap} from 'immutable';
+import { Map, OrderedSet} from 'immutable';
 import * as actionTypes from '../actions/actionTypes';
-import normalizeDrinks from './../utils/normalizeDrinks';
 
-const drinksInfo = (state = Map(), action) => {
+function queryUpdater(idx, total){
+  return (v = Map()) => {
+    return v.set("total", total)
+      .update("idx", (v = OrderedSet()) => v.union(OrderedSet(idx)));
+  };
+}
 
+const drinksQueries = (state = Map(), action) => {
   switch (action.type) {
-    case actionTypes.DRINK_LIST_SUCCESS:
-      return fromJS(action.drinks.info);
+    case actionTypes.LOAD_DRINKS_SUCCESS:
+      return state.update(action.query.queryStr, queryUpdater(action.drinks.result, action.query.total));
     case actionTypes.CLEAR_DRINKS:
       return new Map();
     default:
@@ -15,24 +20,18 @@ const drinksInfo = (state = Map(), action) => {
   }
 }
 
-const drinksList = (state = OrderedMap(), action) => {
+const drinksData = (state = Map(), action) => {
   switch (action.type) {
-    case actionTypes.DRINK_LIST_SUCCESS:
-      return state.merge(normalizeDrinks(action.drinks.data));
-    case actionTypes.CLEAR_DRINKS:
-      return new OrderedMap();
-    case actionTypes.APPEND_DRINKS:
-      return state.merge(action.data)
-    case actionTypes.UPDATE_DRINK:
-      return state.merge(action.drink)
+    case actionTypes.LOAD_DRINKS_SUCCESS:
+      return state.merge(action.drinks.entities.data);
     default:
       return state;
   }
 }
 
 const drinkReducer = combineReducers({
-  info: drinksInfo,
-  data: drinksList
+  queries: drinksQueries,
+  data: drinksData
 })
 
 export default drinkReducer

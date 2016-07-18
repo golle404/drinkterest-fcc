@@ -2,10 +2,8 @@ import * as actionTypes from '../actions/actionTypes';
 import userReducer from './userReducer';
 import drinkReducer from './drinkReducer';
 import should from 'should';
-import {Map, fromJS, toJS, toOrderedMap} from 'immutable';
-import { Schema, arrayOf, normalize } from 'normalizr';
-
-const drinkSchema = new Schema("data");
+import {Map, fromJS, toJS, OrderedSet} from 'immutable';
+import normalizeDrinks from './../utils/normalizeDrinks';
 
 describe("User Reducer", () => {
 
@@ -41,104 +39,112 @@ describe("User Reducer", () => {
 
 describe("Drink Reducer", () => {
 
-  it('handles SET_DRINKS with empty state', () => {
+  it('handles LOAD_DRINKS_SUCCESS with empty state', () => {
+    const actionData = [
+      {_id: 0, name: "beer"},
+      {_id: 1, name: "vodka"},
+      {_id: 2, name: "whiskey"},
+      {_id: 3, name: "cider"}
+    ]
     const state = {};
     const action = {
-      type: actionTypes.SET_DRINKS,
-      info: {total: 25},
-      data: [
-        {id: 0, name: "beer", url: "http://beer.com", likes: [1,2,3], numLikes: 3},
-        {id: 1, name: "vodka", url: "http://vodka.com", likes: [3,4], numLikes: 2},
-        {id: 2, name: "whiskey", url: "http://whiskey.com", likes: [], numLikes: 0},
-        {id: 3, name: "cider", url: "http://cider.com", likes: [2,3], numLikes: 2}
-      ]
+      type: actionTypes.LOAD_DRINKS_SUCCESS,
+      query: {
+        queryStr: "recent/",
+        total: 25
+      }
     }
-
-    action.data = normalize(action.data, arrayOf(drinkSchema)).entities.data
+    action.drinks = normalizeDrinks(actionData)
     const nextState = drinkReducer(state, action);
-    nextState.data.toJS().should.deepEqual(action.data);
-    //immutability check
-    should.not.exist(state.info)
-    should.not.exist(state.data)
-    action.data = {}
-    nextState.data.toJS().should.not.deepEqual(action.data);
+    nextState.data.size.should.equal(actionData.length);
+    nextState.data.get("2").toJS().should.deepEqual(actionData[2]);
+    nextState.queries.getIn(["recent/", "total"]).should.deepEqual(action.query.total);
+    nextState.queries.getIn(["recent/", "idx"]).toJS().should.deepEqual([0,1,2,3]);
   })
 
-  it('handles SET_DRINKS with existing state', () => {
+  it('handles LOAD_DRINKS_SUCCESS with existing state', () => {
+    const actionData = [
+      {_id: 0, name: "wine"},
+      {_id: 7, name: "rum"},
+      {_id: 12, name: "water"},
+    ]
     const state = {
-      info: {total: 52},
-      data: [
-        {id: 0, name: "lager", url: "http://lager.com", likes: [1,2,3], numLikes: 3},
-        {id: 3, name: "wine", url: "http://wine.com", likes: [2,3,2,5,8], numLikes: 5}
-      ]
-    };
-    const action = {
-      type: actionTypes.SET_DRINKS,
-      info: {total: 25},
-      data: [
-        {id: 0, name: "beer", url: "http://beer.com", likes: [1,2,3], numLikes: 3},
-        {id: 1, name: "vodka", url: "http://vodka.com", likes: [3,4], numLikes: 2},
-        {id: 2, name: "whiskey", url: "http://whiskey.com", likes: [], numLikes: 0},
-        {id: 3, name: "cider", url: "http://cider.com", likes: [2,3], numLikes: 2}
-      ]
+      queries: {
+        'recent/': {
+          total: 25,
+          idx: OrderedSet([ 0, 1, 2, 3 ])
+        }
+      },
+      data: {
+        '0': { _id: 0, name: 'beer' },
+        '1': { _id: 1, name: 'vodka' },
+        '2': { _id: 2, name: 'whiskey' },
+        '3': { _id: 3, name: 'cider' }
+      }
     }
-    state.data = fromJS(normalize(state.data, arrayOf(drinkSchema)).entities.data).toOrderedMap();
-    action.data = normalize(action.data, arrayOf(drinkSchema)).entities.data
+    const action = {
+      type: actionTypes.LOAD_DRINKS_SUCCESS,
+      query: {
+        queryStr: "popular/golle",
+        total: 42
+      }
+    }
+    state.queries = fromJS(state.queries)
+    state.data = fromJS(state.data)
+    action.drinks = normalizeDrinks(actionData)
     const nextState = drinkReducer(state, action);
-    nextState.data.toJS().should.deepEqual(action.data)
-    //immutability check
-    action.data = {}
-    nextState.data.toJS().should.not.deepEqual(action.data);
+    //console.log(nextState);
+    nextState.data.size.should.equal(6);
+    nextState.data.get("2").toJS().should.deepEqual({ _id: 2, name: 'whiskey' });
+    nextState.data.get("7").toJS().should.deepEqual(actionData[1]);
+    nextState.data.get("0").toJS().should.deepEqual(actionData[0]);
+    nextState.queries.getIn(["recent/", "total"]).should.equal(25);
+    nextState.queries.getIn(["popular/golle", "idx"]).toJS().should.deepEqual([0, 7, 12]);
   })
-
-  it('handles APPEND_DRINKS', () => {
+  it('handles LOAD_DRINKS_SUCCESS with existing query', () => {
+    const actionData = [
+      {_id: 0, name: "wine"},
+      {_id: 2, name: "rum"},
+      {_id: 4, name: "water"},
+      {_id: 6, name: "juice"}
+    ]
     const state = {
-      info: {total: 52},
-      data: [
-        {id: 0, name: "lager", url: "http://lager.com", likes: [1,2,3], numLikes: 3},
-        {id: 4, name: "wine", url: "http://wine.com", likes: [2,3,2,5,8], numLikes: 5}
-      ]
-    };
+      queries: {
+        'recent/': {
+          total: 25,
+          idx: OrderedSet([ 0, 1, 2, 3 ])
+        }
+      },
+      data: {
+        '0': { _id: 0, name: 'beer' },
+        '1': { _id: 1, name: 'vodka' },
+        '2': { _id: 2, name: 'whiskey' },
+        '3': { _id: 3, name: 'cider' }
+      }
+    }
     const action = {
-      type: actionTypes.APPEND_DRINKS,
-      info: {total: 25},
+      type: actionTypes.LOAD_DRINKS_SUCCESS,
+      query: {
+        queryStr: "recent/",
+        total: 42
+      },
       data: [
-        {id: 0, name: "beer", url: "http://beer.com", likes: [1,2,3], numLikes: 3},
-        {id: 1, name: "vodka", url: "http://vodka.com", likes: [3,4], numLikes: 2},
-        {id: 2, name: "whiskey", url: "http://whiskey.com", likes: [], numLikes: 0},
-        {id: 3, name: "cider", url: "http://cider.com", likes: [2,3], numLikes: 2}
+        {_id: 0, name: "wine"},
+        {_id: 2, name: "rum"},
+        {_id: 4, name: "water"},
+        {_id: 6, name: "juice"},
       ]
     }
-    state.data = fromJS(normalize(state.data, arrayOf(drinkSchema)).entities.data).toOrderedMap();
-    action.data = normalize(action.data, arrayOf(drinkSchema)).entities.data
+    state.queries = fromJS(state.queries)
+    state.data = fromJS(state.data)
+    action.drinks = normalizeDrinks(actionData)
     const nextState = drinkReducer(state, action);
-    nextState.data.toJS()["0"].should.deepEqual(action.data["0"])
-    nextState.data.toJS()["4"].should.deepEqual(state.data.toJS()["4"])
-    //immutability check
-    action.data = {}
-    state.data = {}
-    nextState.data.toJS()["0"].should.not.deepEqual(action.data["0"])
-    nextState.data.toJS()["4"].should.not.deepEqual(state.data["4"])
-  })
 
-  it('handles UPDATE_DRINKS', () => {
-    const state = {
-      info: {total: 52},
-      data: [
-        {id: 0, name: "beer", url: "http://beer.com", likes: [1,2,3], numLikes: 3},
-        {id: 1, name: "vodka", url: "http://vodka.com", likes: [3,4], numLikes: 2},
-        {id: 2, name: "whiskey", url: "http://whiskey.com", likes: [], numLikes: 0},
-        {id: 3, name: "cider", url: "http://cider.com", likes: [2,3], numLikes: 2}
-      ]
-    };
-    const action = {
-      type: actionTypes.UPDATE_DRINK,
-      drink: {id: 2, name: "water", url: "http://water.com", likes: [10,20], numLikes: 2}
-    }
-    state.data = fromJS(normalize(state.data, arrayOf(drinkSchema)).entities.data).toOrderedMap();
-    action.drink = normalize(action.drink, drinkSchema).entities.data
-    const nextState = drinkReducer(state, action);
-    nextState.data.toJS()["2"].should.deepEqual(action.drink["2"])
+    nextState.data.size.should.equal(6);
+    nextState.data.get("2").toJS().should.deepEqual({_id: 2, name: "rum"});
+    nextState.data.get("6").toJS().should.deepEqual(actionData[3]);
+    nextState.queries.getIn(["recent/", "total"]).should.equal(42);
+    nextState.queries.getIn(["recent/", "idx"]).toJS().should.deepEqual([0, 1, 2, 3, 4, 6]);
   })
 
 })

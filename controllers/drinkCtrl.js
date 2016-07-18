@@ -67,7 +67,8 @@ export function queryDrinks(req, res, next){
   }
   getDrinkList(query, sortBy, start)
     .then((response) => {
-      res.json(response);
+      const queryStr = (req.body.sort || "recent") + "/" + (req.body.submitterName || "");
+      res.json({data: response.data, query: {total: response.total, queryStr: queryStr}});
     }).catch((err) => {
       res.json({error: err})
     })
@@ -83,7 +84,7 @@ export function getDrinkList(query = {}, sortBy = {createdAt: -1}, start = 0){
         if(err){
           reject({error: err})
         }
-        resolve({data: doc, info: {total: total}});
+        resolve({data: doc, total: total});
       })
     })
   })
