@@ -1,4 +1,4 @@
-import { fromJS, toOrderedMap} from 'immutable';
+import { fromJS, toMap, toOrderedSet, Iterable} from 'immutable';
 
 import {createStore, applyMiddleware, compose} from 'redux';
 import rootReducer from '../reducers';
@@ -18,8 +18,13 @@ export default function configureStore(initState){
 function toImmutableState(state){
 
   const normalizedDrinks = normalizeDrinks(state.drinks.data)
-  const immutableDrinks = fromJS(normalizedDrinks).entities;
-  const immutableQueries = fromJS(state.drinks.queries)
+  const immutableDrinks = fromJS(normalizedDrinks.entities.data);
+  const immutableQueries = fromJS(state.drinks.queries);
+  const iQueries = fromJS(state.drinks.queries, (key, value) => {
+    var isIndexed = Iterable.isIndexed(value);
+    return isIndexed ? value.toOrderedSet() : value.toMap();
+  });
+  //console.log(iQueries);
   const immutableUser = fromJS(state.user)
-  return {user: immutableUser, drinks: {data: immutableDrinks, queries: immutableQueries}};
+  return {user: immutableUser, drinks: {data: immutableDrinks, queries: iQueries}};
 }

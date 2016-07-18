@@ -10,10 +10,13 @@ function queryUpdater(idx, total = 0){
 }
 
 const drinksQueries = (state = Map(), action) => {
-  //console.log(action);
   switch (action.type) {
     case actionTypes.LOAD_DRINKS_SUCCESS:
       return state.update(action.query.queryStr, queryUpdater(action.drinks.result, action.query.total));
+    case actionTypes.ADD_DRINK_SUCCESS:
+      const submitterName = action.drinks.entities.data[action.drinks.result[0]].submitterName;
+      const newState = state.update('recent/' + submitterName, queryUpdater(action.drinks.result, state.getIn(["recent/" + action.submitterName, "total"]) + 1));
+      return newState.update('recent/', queryUpdater(action.drinks.result, state.getIn(["recent/", "total"]) + 1));
     case actionTypes.CLEAR_DRINKS:
       return new Map();
     default:
@@ -24,6 +27,8 @@ const drinksQueries = (state = Map(), action) => {
 const drinksData = (state = Map(), action) => {
   switch (action.type) {
     case actionTypes.LOAD_DRINKS_SUCCESS:
+      return state.merge(action.drinks.entities.data);
+    case actionTypes.ADD_DRINK_SUCCESS:
       return state.merge(action.drinks.entities.data);
     default:
       return state;

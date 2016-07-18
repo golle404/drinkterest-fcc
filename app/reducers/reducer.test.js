@@ -101,18 +101,20 @@ describe("Drink Reducer", () => {
     nextState.queries.getIn(["recent/", "total"]).should.equal(25);
     nextState.queries.getIn(["popular/golle", "idx"]).toJS().should.deepEqual([0, 7, 12]);
   })
-  it('handles LOAD_DRINKS_SUCCESS with existing query', () => {
+
+  it('handles ADD_DRINK_SUCCESS', () => {
     const actionData = [
-      {_id: 0, name: "wine"},
-      {_id: 2, name: "rum"},
-      {_id: 4, name: "water"},
-      {_id: 6, name: "juice"}
+      {_id: 6, name: "juice", submitterId: "g404", submitterName: "golle"}
     ]
     const state = {
       queries: {
         'recent/': {
           total: 25,
           idx: OrderedSet([ 0, 1, 2, 3 ])
+        },
+        'recent/golle': {
+          total: 12,
+          idx: OrderedSet([ 0, 1])
         }
       },
       data: {
@@ -123,28 +125,20 @@ describe("Drink Reducer", () => {
       }
     }
     const action = {
-      type: actionTypes.LOAD_DRINKS_SUCCESS,
-      query: {
-        queryStr: "recent/",
-        total: 42
-      },
-      data: [
-        {_id: 0, name: "wine"},
-        {_id: 2, name: "rum"},
-        {_id: 4, name: "water"},
-        {_id: 6, name: "juice"},
-      ]
+      type: actionTypes.ADD_DRINK_SUCCESS,
+      submitterName: actionData[0].submitterName
     }
     state.queries = fromJS(state.queries)
     state.data = fromJS(state.data)
     action.drinks = normalizeDrinks(actionData)
     const nextState = drinkReducer(state, action);
-
-    nextState.data.size.should.equal(6);
-    nextState.data.get("2").toJS().should.deepEqual({_id: 2, name: "rum"});
-    nextState.data.get("6").toJS().should.deepEqual(actionData[3]);
-    nextState.queries.getIn(["recent/", "total"]).should.equal(42);
-    nextState.queries.getIn(["recent/", "idx"]).toJS().should.deepEqual([0, 1, 2, 3, 4, 6]);
+    nextState.data.size.should.equal(5);
+    nextState.data.get("2").toJS().should.deepEqual({ _id: 2, name: 'whiskey' });
+    nextState.data.get("6").toJS().should.deepEqual(actionData[0]);
+    nextState.queries.getIn(["recent/", "total"]).should.equal(26);
+    nextState.queries.getIn(["recent/", "idx"]).toJS().should.deepEqual([0, 1, 2, 3, 6]);
+    nextState.queries.getIn(["recent/golle", "total"]).should.equal(13);
+    nextState.queries.getIn(["recent/golle", "idx"]).toJS().should.deepEqual([0, 1, 6]);
   })
 
 })

@@ -73,7 +73,12 @@ app.get('/*', function (req, res) {
     initialState.user.auth = true;
   }
   getDrinkList().then((resolve) => {
-    //initialState.drinks = resolve;
+    initialState.drinks.data = resolve.data;
+    initialState.drinks.queries['recent/'] = {total: resolve.total}
+    initialState.drinks.queries['recent/'].idx = resolve.data.map((v) => {return v._id})
+    //console.log(initialState.drinks.data);
+    //const queryStr = (req.body.sort || "recent") + "/" + (req.body.submitterName || "");
+    //res.json({data: response.data, query: {total: response.total, queryStr: queryStr}});
     //const store = configureStore(initialState);
     //const html = renderToString(createElement(App, {data: store.getState()}));
     //console.log(store.getState());

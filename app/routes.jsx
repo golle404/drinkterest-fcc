@@ -4,7 +4,8 @@ import Root from './components/Root';
 import Home from './components/Home';
 import DrinksPage from './components/DrinksPage';
 import AuthenticationPage from './components/AuthenticationPage';
-import User from './components/User';
+import UserProfile from './components/UserProfile';
+import DrinkForm from './components/DrinkForm';
 
 import {loadDrinksRequest, clearDrinks} from './actions/drinksActions';
 
@@ -21,13 +22,20 @@ const routes = (store) => {
     }
   }
 
+  const requestAuthentication = (nextState, replace) => {
+    if(!store.getState().user.get("auth")){
+      replace('/auth/login')
+    }
+  }
+
   return (
     <Route path="/" component={Root}>
       <IndexRoute component={Home} />
       <Route path="/drinks(/:sort)(/:user)" component={DrinksPage} onEnter={refreshDrinks}/>
       <Route path="/auth/:method" component={AuthenticationPage} />
-      <Route path="/user/:username/latest" component={User} />
-      <Route path="/user/:username/recent" component={User} />
+      <Route path="/profile" component={UserProfile} />
+      <Route path="/add_drink" component={DrinkForm} onEnter={requestAuthentication}/>
+      <Route path="/drink/edit/:id" component={DrinkForm} onEnter={requestAuthentication}/>
     </Route>
   )
 }

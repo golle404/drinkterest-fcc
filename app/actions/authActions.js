@@ -23,7 +23,7 @@ export const userAuthRequest = (profile) => {
             console.log(json.error);
           }else{
             dispatch(userAuthSuccess(json.user))
-            browserHistory.push('/user/' + json.user.username + '/latest')
+            browserHistory.push('/profile')
           }
         })
       }else{

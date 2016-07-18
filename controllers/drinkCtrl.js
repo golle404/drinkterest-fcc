@@ -36,7 +36,7 @@ export function likeDrink(req, res, next){
 }
 
 export function editDrink(req, res, next){
-  Drink.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, drink) => {
+  Drink.findByIdAndUpdate(req.body.id, req.body, {new: true}, (err, drink) => {
     if(err){
       return res.json({error: err})
     }

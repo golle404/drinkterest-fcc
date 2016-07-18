@@ -7,7 +7,7 @@ let router = Router();
 ////////////  API  /////////////////
 router.post('/api/drink', isLoggedIn, drinkCtrl.addDrink);
 router.put('/api/like/:id', isLoggedIn, drinkCtrl.likeDrink);
-router.put('/api/drink/:id', isLoggedIn, drinkCtrl.editDrink);
+router.put('/api/drink', isLoggedIn, drinkCtrl.editDrink);
 router.delete('/api/drink/:id', isLoggedIn, drinkCtrl.deleteDrink);
 router.post('/api/drink/list', drinkCtrl.queryDrinks);
 // for testing purposis only - loads random data from reddit//
