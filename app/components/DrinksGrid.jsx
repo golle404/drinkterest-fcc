@@ -1,16 +1,17 @@
 import React, { PropTypes } from 'react';
 import {Link} from 'react-router';
 
-const DrinksGrid = (props) => {
+const DrinksGrid = ({data, idx}) => {
   return (
     <ul>
-      {props.data.entrySeq().map((drink) => {
+      {idx.map((id) => {
+        const drink = data[id]
         return (
-          <li key={drink[0]}>
-            <div>{drink[1].get("numLikes")}</div>
-            <div>{drink[1].get("name")}</div>
-            <Link to={"/drinks/recent/" + drink[1].get("submitterName")}>Recent</Link>
-            <Link to={"/drinks/popular/" + drink[1].get("submitterName")}>popular</Link>
+          <li key={id}>
+            <div>{drink.numLikes}</div>
+            <div>{drink.name}</div>
+            <Link to={"/drinks/recent/" + drink.submitterName}>Recent</Link>
+            <Link to={"/drinks/popular/" + drink.submitterName}>popular</Link>
           </li>
         )
       })}

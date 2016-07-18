@@ -65,7 +65,7 @@ import App from './app/components/App';
 app.get('/*', function (req, res) {
   let initialState = {
     user: {},
-    drinks: {data: {}, info: {}}
+    drinks: {data: {}, queries: {}}
   }
   if(req.isAuthenticated()){
     initialState.user.id = req.user._id;

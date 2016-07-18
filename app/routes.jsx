@@ -6,19 +6,19 @@ import DrinksPage from './components/DrinksPage';
 import AuthenticationPage from './components/AuthenticationPage';
 import User from './components/User';
 
-import {drinksListRequest, clearDrinks} from './actions/drinksActions';
+import {loadDrinksRequest, clearDrinks} from './actions/drinksActions';
 
 const routes = (store) => {
 
   const refreshDrinks = (nextState, replace) => {
-    //console.log(nextState)
     const queryParams = {
       submitterName: nextState.params.user || "",
       sort: nextState.params.sort || "recent"
     }
-    //console.log(queryParams)
-    store.dispatch(clearDrinks());
-    store.dispatch(drinksListRequest(queryParams));
+    const queryString = queryParams.sort + "/" + queryParams.submitterName;
+    if(!store.getState().drinks.queries.get(queryString)){
+      store.dispatch(loadDrinksRequest(queryParams))
+    }
   }
 
   return (
