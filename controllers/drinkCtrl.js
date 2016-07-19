@@ -16,7 +16,7 @@ export function addDrink(req, res, next){
 }
 
 export function likeDrink(req, res, next){
-  Drink.findById(req.params.id, (err, drink) => {
+  Drink.findById(req.body.id, (err, drink) => {
     if(err){
       return res.json({error: err})
     }
