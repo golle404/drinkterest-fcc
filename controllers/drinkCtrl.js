@@ -1,5 +1,4 @@
 import Drink from '../models/Drink';
-import fetch from 'node-fetch';
 
 export function addDrink(req, res, next){
   let drink = new Drink(req.body);
@@ -54,7 +53,7 @@ export function deleteDrink(req, res, next){
 }
 
 export function queryDrinks(req, res, next){
-  const start = req.body.start || 0;
+  /*const start = req.body.start || 0;
   let sortBy = {};
   let query = {}
   if(req.body.submitterName){
@@ -64,18 +63,45 @@ export function queryDrinks(req, res, next){
     sortBy.numLikes = -1;
   }else{
     sortBy.createdAt = -1;
-  }
-  getDrinkList(query, sortBy, start)
-    .then((response) => {
+  }*/
+  getDrinkList(req.body.submitterName, req.body.sort, req.body.start, (response) => {
+    if(response.error){
+      return res.json({error: err});
+    }
+    const queryStr = (req.body.sort || "recent") + "/" + (req.body.submitterName || "");
+    res.json({data: response.data, query: {total: response.total, queryStr: queryStr}});
+  })
+    /*.then((response) => {
       const queryStr = (req.body.sort || "recent") + "/" + (req.body.submitterName || "");
       res.json({data: response.data, query: {total: response.total, queryStr: queryStr}});
     }).catch((err) => {
       res.json({error: err})
-    })
+    })*/
 }
 
-export function getDrinkList(query = {}, sortBy = {createdAt: -1}, start = 0){
-  return new Promise((resolve, reject) => {
+export function getDrinkList(username = "", sort = "recent", start = 0, cb){
+  let sortBy = {};
+  let query = {}
+  if(username){
+    query.submitterName = username;
+  }
+  if(sort === "popular"){
+    sortBy.numLikes = -1;
+  }else{
+    sortBy.createdAt = -1;
+  }
+  Drink.find(query).count((err, total) => {
+    if(err){
+      cb({error: err})
+    }
+    Drink.find(query).sort(sortBy).skip(start).limit(20).lean().exec((err, doc) => {
+      if(err){
+        cb({error: err})
+      }
+      cb({data: doc, total: total});
+    })
+  })
+  /*return new Promise((resolve, reject) => {
     Drink.find(query).count((err, total) => {
       if(err){
         reject({error: err})
@@ -87,7 +113,7 @@ export function getDrinkList(query = {}, sortBy = {createdAt: -1}, start = 0){
         resolve({data: doc, total: total});
       })
     })
-  })
+  })*/
 }
 ///////////////   for testing only - loads dummmy data from reddit  /////////////////
 export function loadDummyData(req, res, next){

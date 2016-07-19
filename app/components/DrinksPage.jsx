@@ -6,6 +6,18 @@ import DrinksGrid from './DrinksGrid'
 
 class DrinksPage extends React.Component {
 
+  componentWillMount(){
+    /*const queryParams = {
+      submitterName: this.props.params.user || "",
+      sort: this.props.params.sort || "recent"
+    }
+    //const queryString = queryParams.sort + "/" + queryParams.submitterName;
+    if(!state.drinks.queries.get(queryStr)){
+      //store.dispatch(loadDrinksRequest(queryParams))
+      console.log(ownProps.dispatch);
+    }*/
+  }
+
   loadMore(){
     const params = {
       submitterName: this.props.params.user || "",
@@ -29,7 +41,7 @@ class DrinksPage extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const queryStr = (ownProps.params.sort || "recent") + "/" + (ownProps.params.user || "");
-  const stateQueries = state.drinks.queries.toJS() || {};
+  const stateQueries = state.drinks.queries.toJS();
   let newProps = {}
   if(stateQueries[queryStr]){
     newProps.idx = stateQueries[queryStr].idx;

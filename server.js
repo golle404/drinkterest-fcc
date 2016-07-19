@@ -14,7 +14,7 @@ passportConfig(passport);
 
 import logger from 'morgan';
 
-import router from './api/router';
+import apiRouter from './api/router';
 import {getDrinkList} from './controllers/drinkCtrl'
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
@@ -54,15 +54,48 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 //////////////////////////////////////////
 ////////  router  ///////////////////////
-app.use('/', router);
+app.use('/', apiRouter);
 
 /////////// ssr  ///////////////////////
-import configureStore from './app/store/configureStore';
+import configureStore from './app/store/configureStoreServer';
 import {createElement} from 'react';
 import {renderToString} from 'react-dom/server';
-import App from './app/components/App';
+import {RouterContext, match, createRoutes} from 'react-router';
+import {Provider} from 'react-redux';
+import getRoutes from './app/routes';
 
-app.get('/*', function (req, res) {
+app.get('/*', (req, res) => {
+  const urlParams = req.url.split("/");
+  if(urlParams[1] === "drinks"){
+    getDrinkList(urlParams[3], urlParams[2], 0, (data) => { renderPage(req, res, data); })
+  }else{
+    renderPage(req, res);
+  }
+  /*getDrinkList("", "recent", 0, (response) => {
+    initialState.drinks.data = response.data;
+    initialState.drinks.queries['recent/'] = {total: response.total};
+    initialState.drinks.queries['recent/'].idx = response.data.map((v) => {return v._id});
+    const store = configureStore(initialState);
+    match({routes: getRoutes(store), location: req.url}, (err, redirectLocation, renderProps) => {
+
+      if (err) {
+        res.status(500).send(err.message);
+      } else if (redirectLocation) {
+        res.status(302).redirect(redirectLocation.pathname + redirectLocation.search);
+      } else if (renderProps) {
+        var html = renderToString(
+          createElement(Provider, { store: store },
+          createElement(RouterContext, renderProps)
+        ));
+        res.render("index", {initialState: initialState, html: html});
+      } else {
+        res.sendStatus(404);
+      }
+    })
+  })*/
+});
+
+function renderPage(req, res, data){
   let initialState = {
     user: {},
     drinks: {data: {}, queries: {}}
@@ -72,23 +105,30 @@ app.get('/*', function (req, res) {
     initialState.user.username = req.user.local.username;
     initialState.user.auth = true;
   }
-  getDrinkList().then((resolve) => {
-    initialState.drinks.data = resolve.data;
-    initialState.drinks.queries['recent/'] = {total: resolve.total}
-    initialState.drinks.queries['recent/'].idx = resolve.data.map((v) => {return v._id})
-    //console.log(initialState.drinks.data);
-    //const queryStr = (req.body.sort || "recent") + "/" + (req.body.submitterName || "");
-    //res.json({data: response.data, query: {total: response.total, queryStr: queryStr}});
-    //const store = configureStore(initialState);
-    //const html = renderToString(createElement(App, {data: store.getState()}));
-    //console.log(store.getState());
-    res.status(200).render('index', {html: "", initialState: initialState});
-  },
-  (reject) => {
-    res.json(reject)
+  if(data){
+    const urlParams = req.url.split("/");
+    const query = (urlParams[2] || "recent")  + "/" + (urlParams[3] || "")
+    initialState.drinks.data = data.data;
+    initialState.drinks.queries[query] = {total: data.total};
+    initialState.drinks.queries[query].idx = data.data.map((v) => {return v._id});
+  }
+  const store = configureStore(initialState);
+  match({routes: getRoutes(store), location: req.url}, (err, redirectLocation, renderProps) => {
+    if (err) {
+      res.status(500).send(err.message);
+    } else if (redirectLocation) {
+      res.status(302).redirect(redirectLocation.pathname + redirectLocation.search);
+    } else if (renderProps) {
+      var html = renderToString(
+        createElement(Provider, { store: store },
+        createElement(RouterContext, renderProps)
+      ));
+      res.render("index", {initialState: initialState, html: html});
+    } else {
+      res.sendStatus(404);
+    }
   })
-
-});
+}
 
 app.listen(serverConfig.PORT, () => {
   console.log("Server listening at port " + serverConfig.PORT);

@@ -9,8 +9,7 @@ import DrinkForm from './components/DrinkForm';
 
 import {loadDrinksRequest, clearDrinks} from './actions/drinksActions';
 
-const routes = (store) => {
-
+export const getRoutes = (store) => {
   const refreshDrinks = (nextState, replace) => {
     const queryParams = {
       submitterName: nextState.params.user || "",
@@ -23,7 +22,7 @@ const routes = (store) => {
   }
 
   const requestAuthentication = (nextState, replace) => {
-    if(!store.getState().user.get("auth")){
+    if(!store || !store.getState().user.get("auth")){
       replace('/auth/login')
     }
   }
@@ -38,5 +37,7 @@ const routes = (store) => {
       <Route path="/drink/edit/:id" component={DrinkForm} onEnter={requestAuthentication}/>
     </Route>
   )
-}
-export default routes;
+
+};
+
+export default getRoutes;
