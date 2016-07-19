@@ -84,3 +84,28 @@ export const editDrinkRequest = (drink) => {
     })
   }
 }
+
+export const deleteDrinkRequest = (drinkId) => {
+  return (dispatch) => {
+    return fetch('/api/drink', {
+      method: 'delete',
+      headers: {'Content-Type': 'application/json'},
+      credentials: 'same-origin',
+      body: JSON.stringify(drinkId)
+    }).then((response) => {
+      if(response.ok){
+        response.json().then((json) => {
+          if(json.error){
+            console.log(json.error);
+          }else{
+            console.log(json);
+            //dispatch(addDrinkSuccess(normalizeDrinks([json.drink])));
+            browserHistory.push("/drinks/recent/")
+          }
+        })
+      }else{
+        console.log("bad response");
+      }
+    })
+  }
+}

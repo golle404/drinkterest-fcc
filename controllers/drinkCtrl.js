@@ -45,7 +45,7 @@ export function editDrink(req, res, next){
 }
 
 export function deleteDrink(req, res, next){
-  Drink.remove({_id: req.params.id}, (err) => {
+  Drink.remove({_id: req.body.id}, (err) => {
     if(err){
       return res.json({error: err})
     }

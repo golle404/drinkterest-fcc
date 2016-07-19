@@ -19,7 +19,7 @@ class DrinksPage extends React.Component {
     const loadMore = <button onClick={this.loadMore.bind(this)}>Load More</button>
     return (
       <div>
-        <DrinksGrid data={this.props.drinks} idx={this.props.idx} userId={this.props.userId}/>
+        <DrinksGrid data={this.props.drinks} idx={this.props.idx}/>
         {(this.props.idx.length >= this.props.total) || loadMore}
       </div>
 
@@ -38,8 +38,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     drinks: state.drinks.data.toJS(),
     total: newProps.total || 0,
-    idx: newProps.idx || [],
-    userId: state.user.toJS().id
+    idx: newProps.idx || []
   }
 }
 
