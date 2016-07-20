@@ -1,56 +1,24 @@
 import {Router} from 'express';
 import passport from 'passport';
-import * as userCtrl from '../controllers/userCtrl';
-import * as drinkCtrl from '../controllers/drinkCtrl';
+import * as usersController from '../controllers/usersController';
+import * as submissionsController from '../controllers/submissionsController';
 
 let router = Router();
 ////////////  API  /////////////////
-router.post('/api/drink', isLoggedIn, drinkCtrl.addDrink);
-router.put('/api/like', isLoggedIn, drinkCtrl.likeDrink);
-router.put('/api/drink', isLoggedIn, drinkCtrl.editDrink);
-router.delete('/api/drink', isLoggedIn, drinkCtrl.deleteDrink);
-router.post('/api/drink/list', drinkCtrl.queryDrinks);
+router.post('/api/submission', isLoggedIn, submissionsController.addSubmission);
+router.put('/api/like/:submissionId', isLoggedIn, submissionsController.likeSubmission);
+router.put('/api/submission', isLoggedIn, submissionsController.editSubmission);
+router.delete('/api/submission/:submissionId', isLoggedIn, submissionsController.deleteSubmission);
+
+router.get('/api/submissions/:sort?/:user?', submissionsController.getSubmissions);
 // for testing purposis only - loads random data from reddit//
-router.post('/api/dummy', drinkCtrl.loadDummyData);
-router.delete('/api/dummy', drinkCtrl.deleteDummyData);
+router.post('/api/dummy', submissionsController.loadDummyData);
+router.delete('/api/dummy', submissionsController.deleteDummyData);
 
 ////////// AUTH ROUTES /////////////
-router.post('/auth/local', userCtrl.localAuth);
-/*router.post('/auth/register', (req, res, next) => {
-  passport.authenticate('local-register', (err, user) => {
-    if(err){
-      return res.json({error: err})
-    }
-    if(user){
-      const profile = {username: user.local.username, id: user.id};
-      req.logIn(profile, (loginErr) => {
-        if(loginErr){
-          return res.json({error: loginErr});
-        }
-        return res.json({user: profile});
-      })
-    }
-  })(req, res, next);
-})
+router.post('/auth/local', usersController.localAuth);
 
-router.post('/auth/login', (req, res, next) => {
-  passport.authenticate('local-login', (err, user) => {
-    if(err){
-      return res.json({error: err})
-    }
-    if(user){
-      const profile = {username: user.local.username, id: user.id};
-      req.logIn(profile, (loginErr) => {
-        if(loginErr){
-          return res.json({error: loginErr});
-        }
-        return res.json({user: profile});
-      })
-    }
-  })(req, res, next);
-})*/
-
-router.delete('/auth', isLoggedIn, userCtrl.deleteUser);
+router.delete('/auth', isLoggedIn, usersController.deleteUser);
 router.post('/auth/logout', (req, res) => {
   req.logout();
   res.json({success: true})
@@ -62,8 +30,9 @@ router.get('/restricted', isLoggedIn, (req, res) => {
 })
 
 function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated())
-        return next();
+    if (req.isAuthenticated()){
+      return next();
+    }
     res.json({error: "Forbiden"});
 }
 

@@ -8,12 +8,12 @@ const url = 'http://localhost:' + serverConfig.PORT;
 
 let server = supertest.agent(url);
 
-const drink = {
+const submission = {
   name: "vodka",
   url: "http://vodka.com",
   image: "http://vodka.com/vodka.jpg"
 }
-const newDrink = {
+const newSubmission = {
   name: "beer",
   url: "http://beer.com",
   image: "http://beer.com/beer.jpg"
@@ -32,7 +32,7 @@ const wrongPassword = {
   password: "error"
 }
 
-let userId, drinkId, dummyData;
+let userId, submissionId, dummyData;
 
 describe('Server API test', function () {
 
@@ -87,8 +87,8 @@ describe('Server API test', function () {
   });
 
   it('does not allow adding submission when loged out', (done) => {
-    server.post("/api/drink")
-    .send(drink)
+    server.post("/api/submission")
+    .send(submission)
     .end((err, res) => {
       res.type.should.equal('application/json');
       res.body.error.should.equal("Forbiden");
@@ -130,47 +130,48 @@ describe('Server API test', function () {
   });
 
   it('posts submission', (done) => {
-    server.post("/api/drink")
-    .send(drink)
+    server.post("/api/submission")
+    .send(submission)
     .end((err, res) => {
       res.type.should.equal('application/json');
-      const resDrink = res.body.drink;
-      resDrink.name.should.equal(drink.name);
-      resDrink.url.should.equal(drink.url);
+      const resDrink = res.body.submission;
+      resDrink.name.should.equal(submission.name);
+      resDrink.url.should.equal(submission.url);
       resDrink.submitterName.should.equal(profile.username);
       resDrink.likes.length.should.equal(1);
       resDrink.likes[0].should.equal(resDrink.submitterId);
-      drinkId = resDrink._id;
+      submissionId = resDrink._id;
       done();
     })
 
   })
 
   it('puts like', (done) => {
-    server.put("/api/like/" + drinkId)
+    server.put("/api/like/" + submissionId)
     .end((err, res) => {
       res.type.should.equal('application/json');
-      res.body.drink.likes.length.should.equal(0);
+      res.body.submission.likes.length.should.equal(0);
       done();
     })
 
   })
 
   it('edits submission', (done) => {
-    server.put("/api/drink/" + drinkId)
-    .send(newDrink)
+    newSubmission.id = submissionId
+    server.put("/api/submission")
+    .send(newSubmission)
     .end((err, res) => {
       res.type.should.equal('application/json');
-      res.body.drink.name.should.equal(newDrink.name);
-      res.body.drink.url.should.equal(newDrink.url);
-      res.body.drink.submitterName.should.equal(profile.username);
+      res.body.submission.name.should.equal(newSubmission.name);
+      res.body.submission.url.should.equal(newSubmission.url);
+      res.body.submission.submitterName.should.equal(profile.username);
       done();
     })
 
   })
 
   it('deletes submission', (done) => {
-    server.delete("/api/drink/" + drinkId)
+    server.delete("/api/submission/" + submissionId)
     .end((err, res) => {
       res.type.should.equal('application/json');
       res.body.success.should.equal(true)
@@ -190,7 +191,7 @@ describe('Server API test', function () {
   }).timeout(10000)
 
   it('get default submissions', (done) => {
-    server.get("/api/drink/list")
+    server.get("/api/submissions")
     .end((err, res) => {
       res.type.should.equal('application/json');
       const latest = dummyData.sort((a, b) => {
@@ -200,27 +201,29 @@ describe('Server API test', function () {
       const bd = new Date(res.body.data[randomIndex].createdAt).toString();
       const fd = new Date(latest[randomIndex].createdAt).toString();
       bd.should.equal(fd)
-      res.body.info.total.should.equal(dummyData.length);
+      res.body.query.total.should.equal(dummyData.length);
+      res.body.query.queryStr.should.equal("latest/");
       done();
     })
   })
 
   it('get popular submissions', (done) => {
-    server.get("/api/drink/list")
-    .send({sort: "popular"})
+    server.get("/api/submissions/popular")
     .end((err, res) => {
       res.type.should.equal('application/json');
       res.body.data.length.should.equal(20)
       const popular = dummyData.sort((a, b) => { return b.likes.length - a.likes.length });
       const randomIndex = Math.floor(Math.random()*res.body.data.length);
       res.body.data[randomIndex].numLikes.should.equal(popular[randomIndex].likes.length)
+      res.body.query.total.should.equal(popular.length);
+      res.body.query.queryStr.should.equal("popular/");
       done();
     })
   })
 
   it('get popular submissions 2nd page', (done) => {
-    server.get("/api/drink/list")
-    .send({sort: "popular", start: 10})
+    server.get("/api/submissions/popular")
+    .send({skip: 10})
     .end((err, res) => {
       res.type.should.equal('application/json');
       res.body.data.length.should.equal(dummyData.length - 10)
@@ -232,35 +235,34 @@ describe('Server API test', function () {
   })
 
   it('get user latest submissions', (done) => {
-    server.get("/api/drink/list")
-    .send({submitterId: 4})
+    server.get("/api/submissions/latest/dummy__4")
     .end((err, res) => {
       res.type.should.equal('application/json');
       const filtered = res.body.data.filter((d) => { return d.submitterId === "4"})
       res.body.data.length.should.equal(filtered.length)
+      res.body.query.queryStr.should.equal("latest/dummy__4");
       done();
     })
   })
 
   it('get user popular submissions', (done) => {
-    server.get("/api/drink/list")
-    .send({submitterId: 2, sort: "popular"})
+    server.get("/api/submissions/popular/dummy__5")
     .end((err, res) => {
       res.type.should.equal('application/json');
       const popular = res.body.data
-                        .filter((d) => { return d.submitterId === "2"})
+                        .filter((d) => { return d.submitterName === "dummy__5"})
                         .sort((a, b) => {return b.likes.length - a.likes.length})
       res.body.data.length.should.equal(popular.length)
       const randomIndex = Math.floor(Math.random()*popular.length);
       res.body.data[randomIndex].numLikes.should.equal(popular[randomIndex].likes.length)
-      res.body.info.total.should.equal(popular.length);
+      res.body.query.queryStr.should.equal("popular/dummy__5");
       done();
     })
   })
 
   it('out of submissions', (done) => {
-    server.get("/api/drink/list")
-    .send({submitterId: 2, sort: "popular", start: 20})
+    server.get("/api/submissions/popular/dummy__2")
+    .send({skip: 20})
     .end((err, res) => {
       res.type.should.equal('application/json');
       res.body.data.length.should.equal(0);

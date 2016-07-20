@@ -6,18 +6,6 @@ import DrinksGrid from './DrinksGrid'
 
 class DrinksPage extends React.Component {
 
-  componentWillMount(){
-    /*const queryParams = {
-      submitterName: this.props.params.user || "",
-      sort: this.props.params.sort || "recent"
-    }
-    //const queryString = queryParams.sort + "/" + queryParams.submitterName;
-    if(!state.drinks.queries.get(queryStr)){
-      //store.dispatch(loadDrinksRequest(queryParams))
-      console.log(ownProps.dispatch);
-    }*/
-  }
-
   loadMore(){
     const params = {
       submitterName: this.props.params.user || "",

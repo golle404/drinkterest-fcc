@@ -6,7 +6,7 @@ const schemaOptions = {
   }
 };
 
-const drinkSchema = new Schema({
+const submissionSchema = new Schema({
   name: String,
   url: String,
   image: String,
@@ -17,13 +17,13 @@ const drinkSchema = new Schema({
   createdAt: Date
 }, schemaOptions);
 
-drinkSchema.pre('save', function(next){
+submissionSchema.pre('save', function(next){
   var drink = this;
   if(drink.isModified("likes")){
     drink.numLikes = drink.likes.length;
   }
   next();
 })
-const Drink = mongoose.model('Drink', drinkSchema);
+const Submission = mongoose.model('Submission', submissionSchema);
 
-export default Drink;
+export default Submission;

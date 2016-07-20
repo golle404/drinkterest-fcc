@@ -15,7 +15,7 @@ passportConfig(passport);
 import logger from 'morgan';
 
 import apiRouter from './api/router';
-import {getDrinkList} from './controllers/drinkCtrl'
+import {querySubmissions} from './controllers/submissionsController';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
@@ -64,13 +64,15 @@ import {RouterContext, match, createRoutes} from 'react-router';
 import {Provider} from 'react-redux';
 import getRoutes from './app/routes';
 
-app.get('/*', (req, res) => {
-  const urlParams = req.url.split("/");
+app.use((req, res) => {
+  console.log("use");
+  res.render("index", {initialState: {}, html: ""});
+  /*const urlParams = req.url.split("/");
   if(urlParams[1] === "drinks"){
     getDrinkList(urlParams[3], urlParams[2], 0, (data) => { renderPage(req, res, data); })
   }else{
     renderPage(req, res);
-  }
+  }*/
   /*getDrinkList("", "recent", 0, (response) => {
     initialState.drinks.data = response.data;
     initialState.drinks.queries['recent/'] = {total: response.total};
