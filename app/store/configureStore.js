@@ -16,9 +16,9 @@ export default function configureStore(initState){
 
 function toImmutableState(state){
 
-  const normalizedSubmissions = normalizeSubmissions(state.drinks.data)
+  const normalizedSubmissions = normalizeSubmissions(state.submissions.data)
   const immutableSubmissions = fromJS(normalizedSubmissions.entities.data);
-  const immutableQueries = fromJS(state.drinks.queries, (key, value) => {
+  const immutableQueries = fromJS(state.submissions.queries, (key, value) => {
     var isIndexed = Iterable.isIndexed(value);
     return isIndexed ? value.toOrderedSet() : value.toMap();
   });

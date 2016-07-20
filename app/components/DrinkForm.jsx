@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
-import {addDrinkRequest, editDrinkRequest} from './../actions/drinksActions';
+import {addSubmissionRequest, editSubmissionRequest} from './../actions/submissionsActions';
 
 class DrinkForm extends React.Component {
 
@@ -10,22 +10,22 @@ class DrinkForm extends React.Component {
       name: this.refs.name.value,
       url: this.refs.url.value,
       image: this.refs.image.value,
-      id: this.props.drink._id
+      id: this.props.submission._id
     }
     if(newDrink.id){
-      this.props.dispatch(editDrinkRequest(newDrink))
+      this.props.dispatch(editSubmissionRequest(newDrink))
     }else{
-      this.props.dispatch(addDrinkRequest(newDrink))
+      this.props.dispatch(addSubmissionRequest(newDrink))
     }
   }
 
   render () {
     return(
       <form onSubmit={this.onSubmit.bind(this)}>
-        <div>Add drink</div>
-        <input type="text" ref="name" placeholder="name" defaultValue={this.props.drink.name} />
-        <input type="text" ref="url" placeholder="url" defaultValue={this.props.drink.url}/>
-        <input type="text" ref="image" placeholder="image" defaultValue={this.props.drink.image}/>
+        <div>Add submission</div>
+        <input type="text" ref="name" placeholder="name" defaultValue={this.props.submission.name} />
+        <input type="text" ref="url" placeholder="url" defaultValue={this.props.submission.url}/>
+        <input type="text" ref="image" placeholder="image" defaultValue={this.props.submission.image}/>
         <input type="submit" />
       </form>
     )
@@ -34,7 +34,7 @@ class DrinkForm extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    drink: state.drinks.data.toJS()[ownProps.params.id] || {}
+    submission: state.submissions.data.toJS()[ownProps.params.id] || {}
   }
 }
 

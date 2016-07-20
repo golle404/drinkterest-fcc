@@ -1,32 +1,31 @@
 import * as actionTypes from './actionTypes';
-import normalizeDrinks from './../utils/normalizeDrinks';
+import normalizeSubmissions from './../utils/normalizeSubmissions';
 import {browserHistory} from 'react-router';
 
-export const loadDrinksSuccess = (drinks, query) => {
-  return { type: actionTypes.LOAD_DRINKS_SUCCESS, drinks, query};
+export const loadSubmissionsSuccess = (submissions, query) => {
+  return { type: actionTypes.LOAD_SUBMISSIONS_SUCCESS, submissions, query};
 }
 
-export const addDrinkSuccess = (drinks) => {
-  return { type: actionTypes.ADD_DRINK_SUCCESS, drinks};
+export const addSubmissionSuccess = (submissions) => {
+  return { type: actionTypes.ADD_SUBMISSION_SUCCESS, submissions};
 }
 
-export const clearDrinks = () => {
-  return { type: actionTypes.CLEAR_DRINKS};
+export const clearSubmissions = () => {
+  return { type: actionTypes.CLEAR_SUBMISSIONS};
 }
 
-export const loadDrinksRequest = (params) => {
+export const loadSubmissionsRequest = (queryString) => {
   return (dispatch) => {
-    return fetch('/api/drink/list/', {
-      method: 'post',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(params)
+    return fetch('/api/submissions/' + queryString, {
+      method: 'get',
+      headers: {'Content-Type': 'application/json'}
     }).then((response) => {
       if(response.ok){
         response.json().then((json) => {
           if(json.error){
             console.log(json.error);
           }else{
-            dispatch(loadDrinksSuccess(normalizeDrinks(json.data), json.query));
+            dispatch(loadSubmissionsSuccess(normalizeSubmissions(json.data), json.query));
           }
         })
       }else{
@@ -36,21 +35,21 @@ export const loadDrinksRequest = (params) => {
   }
 }
 
-export const addDrinkRequest = (drink) => {
+export const addSubmissionRequest = (submission) => {
   return (dispatch) => {
-    return fetch('/api/drink', {
+    return fetch('/api/submission', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       credentials: 'same-origin',
-      body: JSON.stringify(drink)
+      body: JSON.stringify(submission)
     }).then((response) => {
       if(response.ok){
         response.json().then((json) => {
           if(json.error){
             console.log(json.error);
           }else{
-            //dispatch(addDrinkSuccess(normalizeDrinks([json.drink])));
-            browserHistory.push("/drinks/recent/" + json.drink.submitterName)
+            //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
+            browserHistory.push("/submissions/latest/" + json.submission.submitterName)
           }
         })
       }else{
@@ -60,13 +59,13 @@ export const addDrinkRequest = (drink) => {
   }
 }
 
-export const editDrinkRequest = (drink) => {
+export const editSubmissionRequest = (submission) => {
   return (dispatch) => {
-    return fetch('/api/drink', {
+    return fetch('/api/submission', {
       method: 'put',
       headers: {'Content-Type': 'application/json'},
       credentials: 'same-origin',
-      body: JSON.stringify(drink)
+      body: JSON.stringify(submission)
     }).then((response) => {
       if(response.ok){
         response.json().then((json) => {
@@ -74,8 +73,8 @@ export const editDrinkRequest = (drink) => {
             console.log(json.error);
           }else{
             console.log(json);
-            //dispatch(addDrinkSuccess(normalizeDrinks([json.drink])));
-            browserHistory.push("/drinks/recent/" + json.drink.submitterName)
+            //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
+            browserHistory.push("/submissions/recent/" + json.submission.submitterName)
           }
         })
       }else{
@@ -85,13 +84,12 @@ export const editDrinkRequest = (drink) => {
   }
 }
 
-export const deleteDrinkRequest = (drinkId) => {
+export const deleteSubmissionRequest = (submissionId) => {
   return (dispatch) => {
-    return fetch('/api/drink', {
+    return fetch('/api/submission/' + submissionId, {
       method: 'delete',
       headers: {'Content-Type': 'application/json'},
-      credentials: 'same-origin',
-      body: JSON.stringify(drinkId)
+      credentials: 'same-origin'
     }).then((response) => {
       if(response.ok){
         response.json().then((json) => {
@@ -99,8 +97,8 @@ export const deleteDrinkRequest = (drinkId) => {
             console.log(json.error);
           }else{
             console.log(json);
-            //dispatch(addDrinkSuccess(normalizeDrinks([json.drink])));
-            browserHistory.push("/drinks/recent/")
+            //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
+            browserHistory.push("/submissions/recent/")
           }
         })
       }else{
@@ -110,13 +108,12 @@ export const deleteDrinkRequest = (drinkId) => {
   }
 }
 
-export const likeDrinkRequest = (drinkId) => {
+export const likeSubmissionRequest = (submissionId) => {
   return (dispatch) => {
-    return fetch('/api/like', {
+    return fetch('/api/like/' + submissionId, {
       method: 'put',
       headers: {'Content-Type': 'application/json'},
-      credentials: 'same-origin',
-      body: JSON.stringify(drinkId)
+      credentials: 'same-origin'
     }).then((response) => {
       if(response.ok){
         response.json().then((json) => {
@@ -124,8 +121,8 @@ export const likeDrinkRequest = (drinkId) => {
             console.log(json.error);
           }else{
             console.log(json);
-            //dispatch(addDrinkSuccess(normalizeDrinks([json.drink])));
-            //browserHistory.push("/drinks/recent/")
+            //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
+            //browserHistory.push("/submissions/recent/")
           }
         })
       }else{

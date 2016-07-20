@@ -54,9 +54,10 @@ export function deleteSubmission(req, res, next){
 }
 
 export function getSubmissions(req, res, next){
-  let submitterName = req.params.user || "";
-  let sort = req.params.sort || "latest";
-  querySubmissions(submitterName, sort, req.body.skip).then((response) => {
+  const submitterName = req.params.user || "";
+  const sort = req.params.sort || "latest";
+  const skip = parseInt(req.query.skip) || 0;
+  querySubmissions(submitterName, sort, skip).then((response) => {
       res.json({data: response.data, query: response.query});
     }).catch((err) => {
       res.json({error: err})

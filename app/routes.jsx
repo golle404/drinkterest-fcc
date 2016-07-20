@@ -7,17 +7,19 @@ import AuthenticationPage from './components/AuthenticationPage';
 import UserProfile from './components/UserProfile';
 import DrinkForm from './components/DrinkForm';
 
-import {loadDrinksRequest, clearDrinks} from './actions/drinksActions';
+import {loadSubmissionsRequest, clearDrinks} from './actions/submissionsActions';
 
 export const getRoutes = (store) => {
-  const refreshDrinks = (nextState, replace) => {
+
+  const shouldReload = (nextState, replace) => {
     const queryParams = {
       submitterName: nextState.params.user || "",
-      sort: nextState.params.sort || "recent"
+      sort: nextState.params.sort || "latest"
     }
     const queryString = queryParams.sort + "/" + queryParams.submitterName;
-    if(!store.getState().drinks.queries.get(queryString)){
-      store.dispatch(loadDrinksRequest(queryParams))
+    if(!store.getState().submissions.queries.get(queryString)){
+      console.log(queryString);
+      store.dispatch(loadSubmissionsRequest(queryString))
     }
   }
 
@@ -30,11 +32,11 @@ export const getRoutes = (store) => {
   return (
     <Route path="/" component={Root}>
       <IndexRoute component={Home} />
-      <Route path="/drinks(/:sort)(/:user)" component={DrinksPage} onEnter={refreshDrinks}/>
+      <Route path="/submissions(/:sort)(/:user)" component={DrinksPage} onEnter={shouldReload}/>
       <Route path="/auth/:method" component={AuthenticationPage} />
       <Route path="/profile" component={UserProfile} />
       <Route path="/add_drink" component={DrinkForm} onEnter={requestAuthentication}/>
-      <Route path="/drink/edit/:id" component={DrinkForm} onEnter={requestAuthentication}/>
+      <Route path="/submission/edit/:id" component={DrinkForm} onEnter={requestAuthentication}/>
     </Route>
   )
 

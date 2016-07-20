@@ -5,9 +5,9 @@ const DrinksGrid = ({data, idx, userId, deleteDrink}) => {
   return (
     <ul>
       {idx.map((id) => {
-        const drink = data[id]
+        const submission = data[id]
         return (
-          <DrinkItem key={id} drink={drink}/>
+          <DrinkItem key={id} submission={submission}/>
         )
       })}
     </ul>
