@@ -1,9 +1,9 @@
 import {combineReducers} from 'redux';
 
-import drinkReducer from './drinkReducer';
+import submissionsReducer from './submissionsReducer';
 import userReducer from './userReducer';
 
 export default combineReducers({
-  drinks: drinkReducer,
+  submissions: submissionsReducer,
   user: userReducer
 })

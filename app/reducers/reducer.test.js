@@ -1,9 +1,9 @@
 import * as actionTypes from '../actions/actionTypes';
 import userReducer from './userReducer';
-import drinkReducer from './drinkReducer';
+import submissionsReducer from './submissionsReducer';
 import should from 'should';
 import {Map, fromJS, toJS, OrderedSet} from 'immutable';
-import normalizeDrinks from './../utils/normalizeDrinks';
+import normalizeSubmissions from './../utils/normalizeSubmissions';
 
 describe("User Reducer", () => {
 
@@ -37,9 +37,9 @@ describe("User Reducer", () => {
 
 })
 
-describe("Drink Reducer", () => {
+describe("Submissions Reducer", () => {
 
-  it('handles LOAD_DRINKS_SUCCESS with empty state', () => {
+  it('handles LOAD_SUBMISSIONS_SUCCESS with empty state', () => {
     const actionData = [
       {_id: 0, name: "beer"},
       {_id: 1, name: "vodka"},
@@ -48,21 +48,21 @@ describe("Drink Reducer", () => {
     ]
     const state = {};
     const action = {
-      type: actionTypes.LOAD_DRINKS_SUCCESS,
+      type: actionTypes.LOAD_SUBMISSIONS_SUCCESS,
       query: {
-        queryStr: "recent/",
+        queryStr: "latest/",
         total: 25
       }
     }
-    action.drinks = normalizeDrinks(actionData)
-    const nextState = drinkReducer(state, action);
+    action.submissions = normalizeSubmissions(actionData)
+    const nextState = submissionsReducer(state, action);
     nextState.data.size.should.equal(actionData.length);
     nextState.data.get("2").toJS().should.deepEqual(actionData[2]);
-    nextState.queries.getIn(["recent/", "total"]).should.deepEqual(action.query.total);
-    nextState.queries.getIn(["recent/", "idx"]).toJS().should.deepEqual([0,1,2,3]);
+    nextState.queries.getIn(["latest/", "total"]).should.deepEqual(action.query.total);
+    nextState.queries.getIn(["latest/", "idx"]).toJS().should.deepEqual([0,1,2,3]);
   })
 
-  it('handles LOAD_DRINKS_SUCCESS with existing state', () => {
+  it('handles LOAD_SUBMISSIONS_SUCCESS with existing state', () => {
     const actionData = [
       {_id: 0, name: "wine"},
       {_id: 7, name: "rum"},
@@ -70,7 +70,7 @@ describe("Drink Reducer", () => {
     ]
     const state = {
       queries: {
-        'recent/': {
+        'latest/': {
           total: 25,
           idx: OrderedSet([ 0, 1, 2, 3 ])
         }
@@ -83,7 +83,7 @@ describe("Drink Reducer", () => {
       }
     }
     const action = {
-      type: actionTypes.LOAD_DRINKS_SUCCESS,
+      type: actionTypes.LOAD_SUBMISSIONS_SUCCESS,
       query: {
         queryStr: "popular/golle",
         total: 42
@@ -91,28 +91,28 @@ describe("Drink Reducer", () => {
     }
     state.queries = fromJS(state.queries)
     state.data = fromJS(state.data)
-    action.drinks = normalizeDrinks(actionData)
-    const nextState = drinkReducer(state, action);
+    action.submissions = normalizeSubmissions(actionData)
+    const nextState = submissionsReducer(state, action);
     //console.log(nextState);
     nextState.data.size.should.equal(6);
     nextState.data.get("2").toJS().should.deepEqual({ _id: 2, name: 'whiskey' });
     nextState.data.get("7").toJS().should.deepEqual(actionData[1]);
     nextState.data.get("0").toJS().should.deepEqual(actionData[0]);
-    nextState.queries.getIn(["recent/", "total"]).should.equal(25);
+    nextState.queries.getIn(["latest/", "total"]).should.equal(25);
     nextState.queries.getIn(["popular/golle", "idx"]).toJS().should.deepEqual([0, 7, 12]);
   })
 
-  it('handles ADD_DRINK_SUCCESS', () => {
+  it('handles ADD_SUBMISSION_SUCCESS', () => {
     const actionData = [
       {_id: 6, name: "juice", submitterId: "g404", submitterName: "golle"}
     ]
     const state = {
       queries: {
-        'recent/': {
+        'latest/': {
           total: 25,
           idx: OrderedSet([ 0, 1, 2, 3 ])
         },
-        'recent/golle': {
+        'latest/golle': {
           total: 12,
           idx: OrderedSet([ 0, 1])
         }
@@ -125,20 +125,20 @@ describe("Drink Reducer", () => {
       }
     }
     const action = {
-      type: actionTypes.ADD_DRINK_SUCCESS,
+      type: actionTypes.ADD_SUBMISSION_SUCCESS,
       submitterName: actionData[0].submitterName
     }
     state.queries = fromJS(state.queries)
     state.data = fromJS(state.data)
-    action.drinks = normalizeDrinks(actionData)
-    const nextState = drinkReducer(state, action);
+    action.submissions = normalizeSubmissions(actionData)
+    const nextState = submissionsReducer(state, action);
     nextState.data.size.should.equal(5);
     nextState.data.get("2").toJS().should.deepEqual({ _id: 2, name: 'whiskey' });
     nextState.data.get("6").toJS().should.deepEqual(actionData[0]);
-    nextState.queries.getIn(["recent/", "total"]).should.equal(26);
-    nextState.queries.getIn(["recent/", "idx"]).toJS().should.deepEqual([0, 1, 2, 3, 6]);
-    nextState.queries.getIn(["recent/golle", "total"]).should.equal(13);
-    nextState.queries.getIn(["recent/golle", "idx"]).toJS().should.deepEqual([0, 1, 6]);
+    nextState.queries.getIn(["latest/", "total"]).should.equal(26);
+    nextState.queries.getIn(["latest/", "idx"]).toJS().should.deepEqual([0, 1, 2, 3, 6]);
+    nextState.queries.getIn(["latest/golle", "total"]).should.equal(13);
+    nextState.queries.getIn(["latest/golle", "idx"]).toJS().should.deepEqual([0, 1, 6]);
   })
 
 })

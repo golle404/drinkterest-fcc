@@ -57,16 +57,20 @@ app.set('view engine', 'jade');
 app.use('/', apiRouter);
 
 /////////// ssr  ///////////////////////
-import configureStore from './app/store/configureStoreServer';
+/*import configureStore from './app/store/configureStoreServer';
 import {createElement} from 'react';
 import {renderToString} from 'react-dom/server';
 import {RouterContext, match, createRoutes} from 'react-router';
 import {Provider} from 'react-redux';
-import getRoutes from './app/routes';
+import getRoutes from './app/routes';*/
 
 app.use((req, res) => {
-  console.log("use");
-  res.render("index", {initialState: {}, html: ""});
+  //console.log(req.params);
+  let initialState = {
+    user: {},
+    submissions: {data: {}, queries: {}}
+  }
+  res.render("index", {initialState: initialState, html: ""});
   /*const urlParams = req.url.split("/");
   if(urlParams[1] === "drinks"){
     getDrinkList(urlParams[3], urlParams[2], 0, (data) => { renderPage(req, res, data); })
