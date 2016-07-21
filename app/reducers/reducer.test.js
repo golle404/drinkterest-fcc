@@ -3,7 +3,7 @@ import userReducer from './userReducer';
 import submissionsReducer from './submissionsReducer';
 import should from 'should';
 import {Map, fromJS, toJS, OrderedSet} from 'immutable';
-import normalizeSubmissions from './../utils/normalizeSubmissions';
+import normalizeSubmissions from './../../utils/normalizeSubmissions';
 
 describe("User Reducer", () => {
 

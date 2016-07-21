@@ -6,10 +6,11 @@ import DrinksPage from './components/DrinksPage';
 import AuthenticationPage from './components/AuthenticationPage';
 import UserProfile from './components/UserProfile';
 import DrinkForm from './components/DrinkForm';
+import {Provider} from 'react-redux';
 
 import {loadSubmissionsRequest, clearDrinks} from './actions/submissionsActions';
 
-export const getRoutes = (store) => {
+export default function getRoutes(store){
 
   const shouldReload = (nextState, replace) => {
     const queryParams = {
@@ -18,7 +19,6 @@ export const getRoutes = (store) => {
     }
     const queryString = queryParams.sort + "/" + queryParams.submitterName;
     if(!store.getState().submissions.queries.get(queryString)){
-      console.log(queryString);
       store.dispatch(loadSubmissionsRequest(queryString))
     }
   }
@@ -34,12 +34,10 @@ export const getRoutes = (store) => {
       <IndexRoute component={Home} />
       <Route path="/submissions(/:sort)(/:user)" component={DrinksPage} onEnter={shouldReload}/>
       <Route path="/auth/:method" component={AuthenticationPage} />
-      <Route path="/profile" component={UserProfile} />
+      <Route path="/profile" component={UserProfile} onEnter={requestAuthentication}/>
       <Route path="/add_drink" component={DrinkForm} onEnter={requestAuthentication}/>
       <Route path="/submission/edit/:id" component={DrinkForm} onEnter={requestAuthentication}/>
     </Route>
   )
 
 };
-
-export default getRoutes;

@@ -16,6 +16,10 @@ import logger from 'morgan';
 
 import apiRouter from './api/router';
 import {querySubmissions} from './controllers/submissionsController';
+
+import generateHtml from './utils/generateHtml';
+import generateInitialState from './utils/generateInitialState';
+
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
@@ -52,89 +56,44 @@ app.use(passport.session());
 /// use jade as view engine ///////////////
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-//////////////////////////////////////////
 ////////  router  ///////////////////////
 app.use('/', apiRouter);
+//////////////////////////////////////////
 
 /////////// ssr  ///////////////////////
-/*import configureStore from './app/store/configureStoreServer';
-import {createElement} from 'react';
-import {renderToString} from 'react-dom/server';
-import {RouterContext, match, createRoutes} from 'react-router';
-import {Provider} from 'react-redux';
-import getRoutes from './app/routes';*/
+app.use("/submissions/:sort?/:user?", (req, res, next) => {
+  const submitterName = req.params.user || "";
+  const sort = req.params.sort || "latest";
+  querySubmissions(submitterName, sort).then((response) => {
+      req.submissions = {data: response.data, query: response.query};
+      next()
+    }).catch((err) => {
+      console.log(err);
+      next()
+    })
+})
 
 app.use((req, res) => {
-  //console.log(req.params);
-  let initialState = {
-    user: {},
-    submissions: {data: {}, queries: {}}
-  }
-  res.render("index", {initialState: initialState, html: ""});
-  /*const urlParams = req.url.split("/");
-  if(urlParams[1] === "drinks"){
-    getDrinkList(urlParams[3], urlParams[2], 0, (data) => { renderPage(req, res, data); })
-  }else{
-    renderPage(req, res);
-  }*/
-  /*getDrinkList("", "recent", 0, (response) => {
-    initialState.drinks.data = response.data;
-    initialState.drinks.queries['recent/'] = {total: response.total};
-    initialState.drinks.queries['recent/'].idx = response.data.map((v) => {return v._id});
-    const store = configureStore(initialState);
-    match({routes: getRoutes(store), location: req.url}, (err, redirectLocation, renderProps) => {
-
-      if (err) {
-        res.status(500).send(err.message);
-      } else if (redirectLocation) {
-        res.status(302).redirect(redirectLocation.pathname + redirectLocation.search);
-      } else if (renderProps) {
-        var html = renderToString(
-          createElement(Provider, { store: store },
-          createElement(RouterContext, renderProps)
-        ));
-        res.render("index", {initialState: initialState, html: html});
-      } else {
+  const initialState = generateInitialState(req.isAuthenticated(), req.user, req.submissions);
+  generateHtml(initialState, req.url).then((response) => {
+    res.render("index", {initialState: initialState, html: response});
+  }).catch((error) => {
+    switch (error.status) {
+      case 500:
+        res.status(500).send(error.message);
+        break;
+      case 302:
+        if(error.redirectPath){
+          res.status(302).redirect(error.redirectPath);
+        }else{
+          res.sendStatus(302);
+        };
+        break;
+      default:
         res.sendStatus(404);
-      }
-    })
-  })*/
-});
-
-function renderPage(req, res, data){
-  let initialState = {
-    user: {},
-    drinks: {data: {}, queries: {}}
-  }
-  if(req.isAuthenticated()){
-    initialState.user.id = req.user._id;
-    initialState.user.username = req.user.local.username;
-    initialState.user.auth = true;
-  }
-  if(data){
-    const urlParams = req.url.split("/");
-    const query = (urlParams[2] || "recent")  + "/" + (urlParams[3] || "")
-    initialState.drinks.data = data.data;
-    initialState.drinks.queries[query] = {total: data.total};
-    initialState.drinks.queries[query].idx = data.data.map((v) => {return v._id});
-  }
-  const store = configureStore(initialState);
-  match({routes: getRoutes(store), location: req.url}, (err, redirectLocation, renderProps) => {
-    if (err) {
-      res.status(500).send(err.message);
-    } else if (redirectLocation) {
-      res.status(302).redirect(redirectLocation.pathname + redirectLocation.search);
-    } else if (renderProps) {
-      var html = renderToString(
-        createElement(Provider, { store: store },
-        createElement(RouterContext, renderProps)
-      ));
-      res.render("index", {initialState: initialState, html: html});
-    } else {
-      res.sendStatus(404);
     }
   })
-}
+});
 
 app.listen(serverConfig.PORT, () => {
   console.log("Server listening at port " + serverConfig.PORT);

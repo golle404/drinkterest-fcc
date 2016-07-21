@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes';
-import normalizeSubmissions from './../utils/normalizeSubmissions';
+import normalizeSubmissions from './../../utils/normalizeSubmissions';
 import {browserHistory} from 'react-router';
 
 export const loadSubmissionsSuccess = (submissions, query) => {
@@ -121,7 +121,7 @@ export const likeSubmissionRequest = (submissionId) => {
             console.log(json.error);
           }else{
             console.log(json);
-            //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
+            dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
             //browserHistory.push("/submissions/recent/")
           }
         })
