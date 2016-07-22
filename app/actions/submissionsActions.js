@@ -4,15 +4,15 @@ import {browserHistory} from 'react-router';
 
 export const loadSubmissionsSuccess = (submissions, query) => {
   return { type: actionTypes.LOAD_SUBMISSIONS_SUCCESS, submissions, query};
-}
+};
 
 export const addSubmissionSuccess = (submissions) => {
   return { type: actionTypes.ADD_SUBMISSION_SUCCESS, submissions};
-}
+};
 
 export const clearSubmissions = () => {
   return { type: actionTypes.CLEAR_SUBMISSIONS};
-}
+};
 
 export const loadSubmissionsRequest = (queryString) => {
   return (dispatch) => {
@@ -27,13 +27,13 @@ export const loadSubmissionsRequest = (queryString) => {
           }else{
             dispatch(loadSubmissionsSuccess(normalizeSubmissions(json.data), json.query));
           }
-        })
+        });
       }else{
         console.log("bad response");
       }
-    })
-  }
-}
+    });
+  };
+};
 
 export const addSubmissionRequest = (submission) => {
   return (dispatch) => {
@@ -49,15 +49,15 @@ export const addSubmissionRequest = (submission) => {
             console.log(json.error);
           }else{
             //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
-            browserHistory.push("/submissions/latest/" + json.submission.submitterName)
+            browserHistory.push("/submissions/latest/" + json.submission.submitterName);
           }
-        })
+        });
       }else{
         console.log("bad response");
       }
-    })
-  }
-}
+    });
+  };
+};
 
 export const editSubmissionRequest = (submission) => {
   return (dispatch) => {
@@ -74,15 +74,15 @@ export const editSubmissionRequest = (submission) => {
           }else{
             console.log(json);
             //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
-            browserHistory.push("/submissions/recent/" + json.submission.submitterName)
+            browserHistory.push("/submissions/recent/" + json.submission.submitterName);
           }
-        })
+        });
       }else{
         console.log("bad response");
       }
-    })
-  }
-}
+    });
+  };
+};
 
 export const deleteSubmissionRequest = (submissionId) => {
   return (dispatch) => {
@@ -98,15 +98,15 @@ export const deleteSubmissionRequest = (submissionId) => {
           }else{
             console.log(json);
             //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
-            browserHistory.push("/submissions/recent/")
+            browserHistory.push("/submissions/recent/");
           }
-        })
+        });
       }else{
         console.log("bad response");
       }
-    })
-  }
-}
+    });
+  };
+};
 
 export const likeSubmissionRequest = (submissionId) => {
   return (dispatch) => {
@@ -124,10 +124,10 @@ export const likeSubmissionRequest = (submissionId) => {
             dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
             //browserHistory.push("/submissions/recent/")
           }
-        })
+        });
       }else{
         console.log("bad response");
       }
-    })
-  }
-}
+    });
+  };
+};

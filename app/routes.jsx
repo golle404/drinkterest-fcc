@@ -5,10 +5,11 @@ import Home from './components/Home';
 import DrinksPage from './components/DrinksPage';
 import AuthenticationPage from './components/AuthenticationPage';
 import UserProfile from './components/UserProfile';
-import DrinkForm from './components/DrinkForm';
+import SubmissionForm from './components/SubmissionForm';
 import {Provider} from 'react-redux';
 
 import {loadSubmissionsRequest, clearDrinks} from './actions/submissionsActions';
+
 
 export default function getRoutes(store){
 
@@ -25,18 +26,18 @@ export default function getRoutes(store){
 
   const requestAuthentication = (nextState, replace) => {
     if(!store || !store.getState().user.get("auth")){
-      replace('/auth/login')
+      replace('/auth/login');
     }
   }
 
   return (
     <Route path="/" component={Root}>
-      <IndexRoute component={Home} />
+      <IndexRoute component={Home}/>
       <Route path="/submissions(/:sort)(/:user)" component={DrinksPage} onEnter={shouldReload}/>
       <Route path="/auth/:method" component={AuthenticationPage} />
       <Route path="/profile" component={UserProfile} onEnter={requestAuthentication}/>
-      <Route path="/add_drink" component={DrinkForm} onEnter={requestAuthentication}/>
-      <Route path="/submission/edit/:id" component={DrinkForm} onEnter={requestAuthentication}/>
+      <Route path="/submission/add" component={SubmissionForm} onEnter={requestAuthentication}/>
+      <Route path="/submission/edit/:id" component={SubmissionForm} onEnter={requestAuthentication}/>
     </Route>
   )
 

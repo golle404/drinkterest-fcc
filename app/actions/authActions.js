@@ -22,15 +22,15 @@ export const userAuthRequest = (profile) => {
           if(json.error){
             console.log(json.error);
           }else{
-            dispatch(userAuthSuccess(json.user))
-            browserHistory.push('/profile')
+            dispatch(userAuthSuccess(json.user));
+            browserHistory.push('/profile');
           }
-        })
+        });
       }else{
         console.log("bad response");
       }
-    })
-  }
+    });
+  };
 };
 
 export const userLogoutRequest = () => {
@@ -43,13 +43,13 @@ export const userLogoutRequest = () => {
       if(response.ok){
         response.json().then((json) => {
           if(json.success){
-            dispatch(userLogoutSuccess(json.user))
-            browserHistory.push('/')
+            dispatch(userLogoutSuccess(json.user));
+            browserHistory.push('/');
           }
-        })
+        });
       }else{
         console.log("bad response");
       }
-    })
-  }
+    });
+  };
 };

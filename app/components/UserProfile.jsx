@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import {userLogoutRequest} from './../actions/authActions';
 import {Link} from 'react-router';
-import Button from 'muicss/lib/react/button';
 
 class UserProfile extends React.Component {
 
@@ -14,8 +13,8 @@ class UserProfile extends React.Component {
     return (
       <div>
         <p>{this.props.user.username}</p>
-        <Button onClick={this.onClick.bind(this)}>Logout</Button>
-        <Link to="/add_drink">Add Drink</Link>
+        <button onClick={this.onClick.bind(this)}>Logout</button>
+        <Link to="/submission/add">Add Drink</Link>
       </div>
     )
   }

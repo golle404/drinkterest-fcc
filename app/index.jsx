@@ -9,7 +9,6 @@ import configureStore from './store/configureStore';
 
 import './../style/style.scss';
 
-
 const store = configureStore(window.INITIAL_STATE);
 
 render(

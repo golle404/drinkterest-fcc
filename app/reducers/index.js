@@ -6,4 +6,4 @@ import userReducer from './userReducer';
 export default combineReducers({
   submissions: submissionsReducer,
   user: userReducer
-})
+});

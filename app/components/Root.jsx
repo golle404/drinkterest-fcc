@@ -5,9 +5,9 @@ import Footer from './Footer';
 class Root extends React.Component {
   render () {
     return (
-      <div className="root">
+      <div className="hg-container">
         <Header />
-          <div className="main">
+          <div className="hg-content">
             {this.props.children}
           </div>
         <Footer />

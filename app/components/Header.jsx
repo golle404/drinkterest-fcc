@@ -1,16 +1,25 @@
 import React, { PropTypes } from 'react';
-import {Link} from 'react-router';
+import {connect} from 'react-redux';
 
-const Header = (props) => {
-  return (
-    <header>
-      <Link to="/">Home</Link>
-      {" | "}
-      <Link to="/auth/login">Login</Link>
-      {" | "}
-      <Link to="/add_drink">Add Drink</Link>
-    </header>
-  )
+import HeaderBrand from './HeaderBrand';
+import HeaderNavDefault from './HeaderNavDefault';
+import HeaderNavAuth from './HeaderNavAuth';
+
+class Header extends React.Component {
+  render () {
+    return (
+        <header className="hg-header">
+          <HeaderBrand/>
+          {this.props.user.auth ? <HeaderNavAuth user={this.props.user}/> : <HeaderNavDefault/>}
+        </header>
+    )
+  }
 }
 
-export default Header;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user.toJS()
+  }
+}
+
+export default connect(mapStateToProps)(Header);

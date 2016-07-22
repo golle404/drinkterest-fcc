@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 const Footer = (props) => {
   return (
-    <footer>Footer</footer>
+    <footer  className="hg-footer">Footer</footer>
   )
 }
 

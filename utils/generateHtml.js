@@ -3,7 +3,7 @@ import {renderToString} from 'react-dom/server';
 import {RouterContext, match, createRoutes} from 'react-router';
 import {Provider} from 'react-redux';
 import configureStore from './../app/store/configureStore';
-import getRoutes from './../app/routes';
+import getRoutes from './../app/routes.jsx';
 
 export default function generateHtml(initialState, location){
   return new Promise((resolve, reject) => {
@@ -23,6 +23,6 @@ export default function generateHtml(initialState, location){
       }else{
         reject({status: 302});
       }
-    })
-  })
+    });
+  });
 }

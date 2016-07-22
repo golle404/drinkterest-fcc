@@ -17,7 +17,7 @@ import logger from 'morgan';
 import apiRouter from './api/router';
 import {querySubmissions} from './controllers/submissionsController';
 
-import generateHtml from './utils/generateHtml';
+//import generateHtml from './utils/generateHtml';
 import generateInitialState from './utils/generateInitialState';
 
 import webpack from 'webpack';
@@ -42,6 +42,7 @@ mongoose.connection.on("error", () => {
   process.exit(1);
 })
 
+//app.use('/public', express.static(path.join(__dirname, '/public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
@@ -69,13 +70,14 @@ app.use("/submissions/:sort?/:user?", (req, res, next) => {
       next()
     }).catch((err) => {
       console.log(err);
-      next()
+      next();
     })
 })
 
 app.use((req, res) => {
   const initialState = generateInitialState(req.isAuthenticated(), req.user, req.submissions);
-  generateHtml(initialState, req.url).then((response) => {
+  res.render("index", {initialState: initialState, html: ""});
+  /*generateHtml(initialState, req.url).then((response) => {
     res.render("index", {initialState: initialState, html: response});
   }).catch((error) => {
     switch (error.status) {
@@ -92,7 +94,7 @@ app.use((req, res) => {
       default:
         res.sendStatus(404);
     }
-  })
+  })*/
 });
 
 app.listen(serverConfig.PORT, () => {

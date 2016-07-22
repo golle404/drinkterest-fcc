@@ -1,31 +1,9 @@
 @import './../node_modules/reset-css/_reset.scss';
-@import './../node_modules/muicss/lib/sass/mui.scss';
-.root{
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-.main{
-  flex-grow: 1;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  padding-top: 2em;
-}
-header, footer{
-  background-color: #000;
-  color: #fff;
-  min-height: 2em;
-}
-li{
-  display: flex;
-  justify-content: space-between;
-  padding: 8px;
-  border: 1px solid rgba(24, 24, 24, .1);
-  margin-bottom: 4px;
-}
-header{
-  a{
-    color: white;
-  }
-}
+@import '_variables.scss';
+@import '_roboto.scss';
+@import '_mixins.scss';
+@import '_animations.scss';
+@import '_global.scss';
+@import "_header.scss";
+@import "_form.scss";
+@import "_buttons.scss";

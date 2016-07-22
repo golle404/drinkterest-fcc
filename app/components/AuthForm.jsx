@@ -3,13 +3,15 @@ import {connect} from 'react-redux';
 
 import {userAuthRequest} from './../actions/authActions';
 
+import FormInputGroup from './FormInputGroup';
+
 class AuthForm extends React.Component {
 
   onFormSubmit(e){
     e.preventDefault()
     const loginData = {
-      username: this.refs.username.value,
-      password: this.refs.password.value,
+      username: this.refs.username.refs.username.value,
+      password: this.refs.password.refs.password.value,
       register: this.props.register
     }
     this.props.dispatch(userAuthRequest(loginData));
@@ -17,11 +19,15 @@ class AuthForm extends React.Component {
 
   render () {
     return (
-      <form onSubmit={this.onFormSubmit.bind(this)}>
-        <input type="text" ref="username" autoFocus/>
-        <input type="password" ref="password"/>
-        <input type="submit" />
-      </form>
+      <div className="form-body">
+        <form onSubmit={this.onFormSubmit.bind(this)}>
+          <FormInputGroup id="username" ref="username" label="Username" type="text" autoFocus={true} />
+          <FormInputGroup id="password" ref="password" label="Password" type="password" />
+            <div className="form-input-group center-align">
+              <button type="submit" className="btn btn-primary">{this.props.register ? "Register" : "Login"}</button>
+            </div>
+        </form>
+      </div>
     )
   }
 }
