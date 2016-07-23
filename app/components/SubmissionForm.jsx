@@ -9,9 +9,9 @@ class SubmissionForm extends React.Component {
   onFormSubmit(e){
     e.preventDefault();
     const newDrink = {
-      name: this.refs.name.refs.name.value,
-      url: this.refs.url.refs.url.value,
-      image: this.refs.image.refs.image.value,
+      name: this.refs.name.refs.input.value,
+      url: this.refs.url.refs.input.value,
+      image: this.refs.image.refs.input.value,
       id: this.props.submission._id
     }
     if(newDrink.id){
@@ -43,8 +43,7 @@ class SubmissionForm extends React.Component {
               id="url"
               ref="url"
               label="Link to page"
-              type="url"
-              required={true}
+              type="text"
               defaultValue={this.props.submission.url} />
             <FormInputGroup
               id="image"

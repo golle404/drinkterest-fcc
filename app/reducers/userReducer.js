@@ -6,7 +6,8 @@ export default function userReducer(state = Map(), action){
     case actionTypes.USER_AUTH_SUCCESS:
       action.user.auth = true;
       return fromJS(action.user);
-    case actionTypes.USER_LOGOUT_SUCCESS:
+    case actionTypes.USER_LOGOUT_SUCCESS,
+          actionTypes.USER_DELETE_SUCCESS:
       return Map();
     default:
       return state;

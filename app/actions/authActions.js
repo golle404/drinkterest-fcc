@@ -9,6 +9,10 @@ export const userLogoutSuccess = (user) => {
   return {type: actionTypes.USER_LOGOUT_SUCCESS, user};
 };
 
+export const userDeleteSuccess = (user) => {
+  return {type: actionTypes.USER_DELETE_SUCCESS, user};
+};
+
 export const userAuthRequest = (profile) => {
   return (dispatch) => {
     return fetch('/auth/local', {
@@ -44,6 +48,27 @@ export const userLogoutRequest = () => {
         response.json().then((json) => {
           if(json.success){
             dispatch(userLogoutSuccess(json.user));
+            browserHistory.push('/');
+          }
+        });
+      }else{
+        console.log("bad response");
+      }
+    });
+  };
+};
+
+export const userDeleteRequest = () => {
+  return (dispatch) => {
+    return fetch('/auth', {
+      method: 'delete',
+      headers: {'Content-Type': 'application/json'},
+      credentials: 'same-origin'
+    }).then((response) => {
+      if(response.ok){
+        response.json().then((json) => {
+          if(json.success){
+            dispatch(userDeleteSuccess(json.user));
             browserHistory.push('/');
           }
         });

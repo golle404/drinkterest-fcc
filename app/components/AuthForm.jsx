@@ -10,8 +10,8 @@ class AuthForm extends React.Component {
   onFormSubmit(e){
     e.preventDefault()
     const loginData = {
-      username: this.refs.username.refs.username.value,
-      password: this.refs.password.refs.password.value,
+      username: this.refs.username.refs.input.value,
+      password: this.refs.password.refs.input.value,
       register: this.props.register
     }
     this.props.dispatch(userAuthRequest(loginData));

@@ -1,20 +1,31 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
-import {userLogoutRequest} from './../actions/authActions';
+import {userLogoutRequest, userDeleteRequest} from './../actions/authActions';
 import {Link} from 'react-router';
 
 class UserProfile extends React.Component {
 
-  onClick(){
+  handleLogout(){
     this.props.dispatch(userLogoutRequest());
   }
 
+  handleDelete(){
+    this.props.dispatch(userDeleteRequest());
+  }
+
   render () {
+    const username = this.props.user.username;
     return (
-      <div>
-        <p>{this.props.user.username}</p>
-        <button onClick={this.onClick.bind(this)}>Logout</button>
-        <Link to="/submission/add">Add Drink</Link>
+      <div className="profile-container">
+        <div className="profile-header center-align">Welcome {username}</div>
+          <div className="profile-body center-align">
+            <Link className="btn btn-primary" to={"/submissions/latest/" + username}>Your Submissions</Link>
+            <Link className="btn btn-primary" to="/submission/add">Submit Drink</Link>
+          </div>
+          <div className="profile-footer  center-align">
+            <button className="btn btn-primary" onClick={this.handleLogout.bind(this)}>Logout</button>
+            <button className="btn btn-accent" onClick={this.handleDelete.bind(this)}>Delete Account</button>
+          </div>
       </div>
     )
   }

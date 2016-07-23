@@ -1,0 +1,23 @@
+.profile-container{
+  @include card(2);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+.profile-header{
+  font-size: 2em;
+  padding: 12px;
+  color: $primary-color;
+  border-bottom: 1px solid $gray-soft;
+}
+.profile-footer, .profile-body{
+  margin-top: 12px;
+  display: block;
+}
+.profile-body{
+  padding: 24px 0;
+}
+.profile-footer{
+  padding: 12px;
+  border-top: 1px solid $gray-soft;
+}
