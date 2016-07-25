@@ -1,5 +1,6 @@
 .form-container{
   @include card(2);
+  background-color: white;
 }
 .form-header{
   display: flex;
@@ -10,7 +11,6 @@
     flex-grow: 1;
     text-align: center;
     font-size: 1.5em;
-    color: $whitey;
     a, span{
       display: inline-block;
       padding: 14px 0;

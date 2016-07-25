@@ -25,6 +25,7 @@ export const loadSubmissionsRequest = (queryString) => {
           if(json.error){
             console.log(json.error);
           }else{
+            console.log(json.data, json.query);
             dispatch(loadSubmissionsSuccess(normalizeSubmissions(json.data), json.query));
           }
         });

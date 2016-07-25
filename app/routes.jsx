@@ -2,7 +2,7 @@ import React from 'react';
 import {Route, IndexRoute} from 'react-router';
 import Root from './components/Root';
 import Home from './components/Home';
-import DrinksPage from './components/DrinksPage';
+import SubmissionsPage from './components/SubmissionsPage';
 import AuthenticationPage from './components/AuthenticationPage';
 import UserProfile from './components/UserProfile';
 import SubmissionForm from './components/SubmissionForm';
@@ -15,7 +15,7 @@ export default function getRoutes(store){
 
   const shouldReload = (nextState, replace) => {
     const queryParams = {
-      submitterName: nextState.params.user || "",
+      submitterName: nextState.params.submitter || "",
       sort: nextState.params.sort || "latest"
     }
     const queryString = queryParams.sort + "/" + queryParams.submitterName;
@@ -32,8 +32,8 @@ export default function getRoutes(store){
 
   return (
     <Route path="/" component={Root}>
-      <IndexRoute component={Home}/>
-      <Route path="/submissions(/:sort)(/:user)" component={DrinksPage} onEnter={shouldReload}/>
+      <IndexRoute component={SubmissionsPage}/>
+      <Route path="/submissions(/:sort)(/:submitter)" component={SubmissionsPage} onEnter={shouldReload}/>
       <Route path="/auth/:method" component={AuthenticationPage} />
       <Route path="/profile" component={UserProfile} onEnter={requestAuthentication}/>
       <Route path="/submission/add" component={SubmissionForm} onEnter={requestAuthentication}/>

@@ -3,7 +3,7 @@ import {findDOMNode} from 'react-dom';
 
 const ModularComponent = (Composed) => {
   return class extends React.Component {
-    static displayName = 'ModularComponent';
+    //static displayName = 'ModularComponent';
 
     constructor(props) {
        super(props);
