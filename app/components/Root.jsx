@@ -1,26 +1,26 @@
 import React, { PropTypes } from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import Notification from './Notification';
 
 class Root extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {childKey: 0};
-  }
-  componentWillReceiveProps(){
-    this.setState({childKey: this.state.childKey + 1})
-  }
   render () {
     return (
       <div className="hg-container">
-        <Header />
-          <div className="hg-content" key={this.state.childKey}>
-            {this.props.children}
-          </div>
+        <Notification />
+        <Header loc={this.props.location}/>
+        <div className="hg-content">
+          {this.props.children}
+        </div>
         <Footer />
       </div>
     )
   }
+}
+
+Root.propTypes = {
+  children: PropTypes.element.isRequired,
+  location: PropTypes.object.isRequired
 }
 
 export default Root;

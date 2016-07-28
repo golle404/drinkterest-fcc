@@ -44,6 +44,10 @@
   &.btn-accent{
     background-color: $accent-color;
   }
+  &.btn-primary-flat{
+    background-color: transparent;
+    color: $primary-color;
+  }
   &.btn-accent-flat{
     background-color: transparent;
     color: $accent-color;

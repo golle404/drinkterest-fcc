@@ -19,8 +19,8 @@ class UserProfile extends React.Component {
       <div className="profile-container">
         <div className="profile-header center-align">Welcome {username}</div>
           <div className="profile-body center-align">
-            <Link className="btn btn-primary" to={"/submissions/latest/" + username}>Your Submissions</Link>
-            <Link className="btn btn-primary" to="/submission/add">Submit Drink</Link>
+            <Link className="btn btn-primary-flat" to={"/submissions/latest/" + username}>Your Submissions</Link>
+            <Link className="btn btn-primary-flat" to="/submission/add">Submit Drink</Link>
           </div>
           <div className="profile-footer  center-align">
             <button className="btn btn-primary" onClick={this.handleLogout.bind(this)}>Logout</button>

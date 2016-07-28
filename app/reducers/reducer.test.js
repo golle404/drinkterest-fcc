@@ -1,6 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 import userReducer from './userReducer';
 import submissionsReducer from './submissionsReducer';
+import notificationReducer from './notificationReducer';
 import should from 'should';
 import {Map, fromJS, toJS, OrderedSet} from 'immutable';
 import normalizeSubmissions from './../../utils/normalizeSubmissions';
@@ -139,6 +140,38 @@ describe("Submissions Reducer", () => {
     nextState.queries.getIn(["latest/", "idx"]).toJS().should.deepEqual([0, 1, 2, 3, 6]);
     nextState.queries.getIn(["latest/golle", "total"]).should.equal(13);
     nextState.queries.getIn(["latest/golle", "idx"]).toJS().should.deepEqual([0, 1, 6]);
+  });
+
+});
+
+describe("Notification Reducer", () => {
+
+  it('handles SHOW_NOTIFICATION', () => {
+    const state = Map();
+    const action = {
+      type: actionTypes.SHOW_NOTIFICATION,
+      notification: {
+        message: "lorem",
+        className: "danger"
+      }
+    };
+    const nextState = notificationReducer(state, action);
+    nextState.get("message").should.equal(action.notification.message);
+    nextState.get("className").should.equal(action.notification.className);
+    nextState.get("active").should.equal(true);
+  });
+
+  it('handles HIDE_NOTIFICATION', () => {
+    const state = Map();
+    const action = {
+      type: actionTypes.HIDE_NOTIFICATION,
+      notification: {
+        message: "lorem",
+        className: "danger"
+      }
+    };
+    const nextState = notificationReducer(state, action);
+    nextState.get("active").should.equal(false);
   });
 
 });

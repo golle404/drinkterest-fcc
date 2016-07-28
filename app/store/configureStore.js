@@ -23,7 +23,19 @@ function toImmutableState(state){
     const isIndexed = Iterable.isIndexed(value);
     return isIndexed ? value.toOrderedSet() : value.toMap();
   });
-
   const immutableUser = fromJS(state.user);
-  return {user: immutableUser, submissions: {data: immutableSubmissions, queries: immutableQueries}};
+  const immutableNotification = fromJS({
+    className: "",
+    message: "",
+    active: false
+  })
+  return {
+    user: immutableUser,
+    submissions: {
+      data: immutableSubmissions,
+      queries: immutableQueries
+    },
+    numFetchRequests: 0,
+    notification: immutableNotification
+  };
 }

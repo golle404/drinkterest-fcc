@@ -22,11 +22,13 @@ class SubmissionForm extends React.Component {
   }
 
   render () {
+    const {_id, name, url, image} = this.props.submission;
+
     return(
       <div className="form-container">
         <div className="form-header">
           <div className="form-header-tab">
-            <span>{this.props.submission._id ? "Edit" : "Submit New"} Drink</span>
+            <span>{_id ? "Edit" : "Submit New"} Drink</span>
           </div>
         </div>
         <div className="form-body">
@@ -38,23 +40,23 @@ class SubmissionForm extends React.Component {
               type="text"
               autoFocus={true}
               required={true}
-              defaultValue={this.props.submission.name} />
+              defaultValue={name} />
             <FormInputGroup
               id="url"
               ref="url"
               label="Link to page"
               type="text"
-              defaultValue={this.props.submission.url} />
+              defaultValue={url} />
             <FormInputGroup
               id="image"
               ref="image"
               label="Image src"
               type="text"
               required={true}
-              defaultValue={this.props.submission.image} />
+              defaultValue={image} />
               <div className="form-input-group center-align">
                 <button type="submit" className="btn btn-primary">
-                  {this.props.submission._id ? "Update" : "Save"}
+                  {_id ? "Update" : "Save"}
                 </button>
               </div>
           </form>
@@ -64,6 +66,10 @@ class SubmissionForm extends React.Component {
   }
 }
 
+SubmissionForm.propTypes = {
+  submission: PropTypes.object
+}
+
 const mapStateToProps = (state, ownProps) => {
   return {
     submission: state.submissions.data.toJS()[ownProps.params.id] || {}
@@ -71,13 +77,3 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 export default connect(mapStateToProps)(SubmissionForm);
-
-/*
-<form onSubmit={this.onSubmit.bind(this)}>
-  <div>Add submission</div>
-  <input type="text" ref="name" placeholder="name" defaultValue={this.props.submission.name} />
-  <input type="text" ref="url" placeholder="url" defaultValue={this.props.submission.url}/>
-  <input type="text" ref="image" placeholder="image" defaultValue={this.props.submission.image}/>
-  <input type="submit" />
-</form>
-*/

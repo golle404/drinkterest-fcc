@@ -77,7 +77,7 @@
     @include card(1);
     border: none;
     background-color: $whitey;
-    padding: 3px 6px;
+    padding: 1px 6px;
     color: $accent-color;
     font-size: .9em;
     display: inline-block;
@@ -92,7 +92,7 @@
       @include card(2);
     }
     &:before{
-      content: "\2665";
+      content: "\2661";
       color: #f44336;
       font-size: medium;
       padding-right: 4px;
@@ -100,8 +100,11 @@
     &:after{
       background-color: rgba(244,67,54,.25);
     }
-    &.voted:before{
-      content: "\2661";
+    &.voted{
+      padding: 2px 7px 3px 6px;
+      &:before{
+        content: "\2665";
+      }
     }
   }
 }

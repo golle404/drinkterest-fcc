@@ -7,3 +7,19 @@
     opacity: 0;
   }
 }
+
+@keyframes flash {
+  50%{
+    opacity: 0;
+  }
+}
+
+@keyframes notification-show {
+  0%, 100% {
+    transform: translate(-50%, -200%) scale(.1, .1);
+  }
+
+  20%, 80% {
+    transform: translate(-50%, 0) scale(1, 1);
+  }
+}

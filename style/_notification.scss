@@ -1,0 +1,24 @@
+.notification{
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  display: none;
+  z-index: 9999;
+  &.active{
+    display: block;
+    animation: notification-show 2000ms linear;
+  }
+  div{
+    padding: 1.5em;
+    color: $whitey;
+  }
+  .info{
+    background-color: $info-color;
+  }
+  .error{
+    background-color: $error-color;
+  }
+  .warning{
+    background-color: $warning-color;
+  }
+}

@@ -32,12 +32,12 @@ export default function getRoutes(store){
 
   return (
     <Route path="/" component={Root}>
-      <IndexRoute component={SubmissionsPage}/>
-      <Route path="/submissions(/:sort)(/:submitter)" component={SubmissionsPage} onEnter={shouldReload}/>
-      <Route path="/auth/:method" component={AuthenticationPage} />
-      <Route path="/profile" component={UserProfile} onEnter={requestAuthentication}/>
-      <Route path="/submission/add" component={SubmissionForm} onEnter={requestAuthentication}/>
-      <Route path="/submission/edit/:id" component={SubmissionForm} onEnter={requestAuthentication}/>
+      <IndexRoute component={SubmissionsPage} onEnter={shouldReload}/>
+      <Route path="profile" component={UserProfile} onEnter={requestAuthentication}/>
+      <Route path="submission/add" component={SubmissionForm} onEnter={requestAuthentication}/>
+      <Route path="submission/edit/:id" component={SubmissionForm} onEnter={requestAuthentication}/>
+      <Route path="submissions(/:sort)(/:submitter)" component={SubmissionsPage} onEnter={shouldReload}/>
+      <Route path="auth/:method" component={AuthenticationPage} />
     </Route>
   )
 

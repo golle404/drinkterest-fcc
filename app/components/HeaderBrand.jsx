@@ -3,7 +3,7 @@ import {Link} from 'react-router';
 
 const HeaderBrand = () => {
   return (
-    <Link to="/" className="header-brand">Drinkterest</Link>
+    <Link to="/" className={"header-brand"}>Drinkterest</Link>
   )
 }
 

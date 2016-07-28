@@ -17,7 +17,7 @@ class SubmissionTile extends React.Component {
   render () {
     const submission = this.props.submission;
     const user = this.props.user;
-    const voted = user.auth && submission.likes.indexOf(user.id) === -1;
+    const voted = user.auth && submission.likes.indexOf(user.id) != -1;
     return (
       <div className="submission-tile">
         <div className="submission-tile-image">

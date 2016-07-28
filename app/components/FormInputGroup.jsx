@@ -7,6 +7,13 @@ class FormInputGroup extends React.Component {
     this.state={isDirty: isDirty}
   }
 
+  componentWillReceiveProps(){
+    for(const ref in this.refs){
+      this.refs[ref].value = "";
+    }
+    this.setState({isDirty: false})
+  }
+
   inputChange(){
     if((this.refs.input.value.length !== 0) !== this.state.isDirty){
       this.setState({isDirty: !this.state.isDirty})
@@ -23,7 +30,7 @@ class FormInputGroup extends React.Component {
           ref="input"
           autoFocus={autoFocus}
           required={required}
-          defaultValue={defaultValue}
+          defaultValue={defaultValue || ""}
           className={this.state.isDirty ? "dirty" : ""}
           onChange={this.inputChange.bind(this)}/>
         <label
