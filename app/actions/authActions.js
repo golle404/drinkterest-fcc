@@ -1,6 +1,7 @@
 import * as actionTypes from './actionTypes';
 import {browserHistory} from 'react-router';
 import {fetchData} from './fetchActions';
+import {showNotification} from './notificationActions';
 
 export const userAuthSuccess = (user) => {
   return {type: actionTypes.USER_AUTH_SUCCESS, user};
@@ -24,6 +25,7 @@ export const userAuthRequest = (profile) => {
   return (dispatch) => {
     fetchData('/auth/local', params, dispatch, (json) => {
       dispatch(userAuthSuccess(json.user));
+      dispatch(showNotification({className: "info", message: "Welcome " + json.user.username}));
       browserHistory.push('/profile');
     })
   };
@@ -37,6 +39,7 @@ export const userLogoutRequest = () => {
   };
   return (dispatch) => {
     fetchData('/auth/logout', params, dispatch, (json) => {
+      dispatch(showNotification({className: "warning", message: "You are now loged out"}));
       dispatch(userLogoutSuccess(json.user));
       browserHistory.push('/');
     })
@@ -51,6 +54,7 @@ export const userDeleteRequest = () => {
   };
   return (dispatch) => {
     fetchData('/auth', params, dispatch, (json) => {
+      dispatch(showNotification({className: "error", message: "Your account is deleted"}));
       dispatch(userDeleteSuccess(json.user));
       browserHistory.push('/');
     })

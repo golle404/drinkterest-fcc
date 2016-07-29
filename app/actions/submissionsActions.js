@@ -71,7 +71,7 @@ export const deleteSubmissionRequest = (submissionId) => {
     fetchData('/api/submission/' + submissionId, params, dispatch, (json) => {
       //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
       dispatch(showNotification({className: "warning", message: "Your submission is deleted"}));
-      browserHistory.push("/submissions/recent/");
+      browserHistory.push("/");
     })
   }
 };
@@ -84,7 +84,7 @@ export const likeSubmissionRequest = (submissionId) => {
   };
   return (dispatch) => {
     fetchData('/api/like/' + submissionId, params, dispatch, (json) => {
-      dispatch(showNotification({className: "info", message: "Your like is recieved"}));
+      //dispatch(showNotification({className: "error", message: "Your like is recieved"}));
       dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
       //browserHistory.push("/submissions/recent/")
     })

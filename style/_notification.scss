@@ -4,6 +4,7 @@
   left: 50%;
   display: none;
   z-index: 9999;
+  @include card(4);
   &.active{
     display: block;
     animation: notification-show 2000ms linear;
@@ -11,14 +12,32 @@
   div{
     padding: 1.5em;
     color: $whitey;
+    &:before{
+      content: "";
+      display: inline-block;
+      width: 2em;
+      height: 2em;
+      background-size: cover;
+      margin-right: 1em;
+      vertical-align: middle;
+    }
   }
   .info{
     background-color: $info-color;
+    &:before{
+      background-image: url("svg/ic_check_circle_white_24px.svg");
+    }
   }
   .error{
     background-color: $error-color;
+    &:before{
+      background-image: url("svg/ic_highlight_off_white_24px.svg");
+    }
   }
   .warning{
     background-color: $warning-color;
+    &:before{
+      background-image: url("svg/ic_info_outline_white_24px.svg");
+    }
   }
 }

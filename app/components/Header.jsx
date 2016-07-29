@@ -3,8 +3,9 @@ import {connect} from 'react-redux';
 import {userLogoutRequest} from './../actions/authActions';
 
 import HeaderBrand from './HeaderBrand';
-import HeaderNavDefault from './HeaderNavDefault';
-import HeaderNavAuth from './HeaderNavAuth';
+import HeaderNav from './HeaderNav';
+
+import Spinner from './Spinner';
 
 class Header extends React.Component {
 
@@ -13,11 +14,16 @@ class Header extends React.Component {
   }
 
   render () {
-    const user = this.props.user;
+    const {user, isFetching} = this.props;
     return (
         <header className="hg-header">
-          <HeaderBrand />
-          {user.auth ? <HeaderNavAuth user={user} logoutHandler={this.handleLogout.bind(this)}/> : <HeaderNavDefault/>}
+          <div>
+            <HeaderBrand />
+            <Spinner active={isFetching}/>
+          </div>
+          <div>
+            <HeaderNav user={user} logoutHandler={this.handleLogout.bind(this)}/>
+          </div>
         </header>
     )
   }
@@ -29,7 +35,8 @@ Header.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user.toJS()
+    user: state.user.toJS(),
+    isFetching: state.numFetchRequests > 0
   }
 }
 

@@ -28,8 +28,8 @@ const config = {
       {test: /\.eot(\?v=\d+.\d+.\d+)?$/, loader: 'file'},
       {test: /\.(woff|woff2)$/, loader: 'file-loader?prefix=font/&limit=5000'},
       {test: /\.ttf(\?v=\d+.\d+.\d+)?$/, loader: 'file-loader?limit=10000&mimetype=application/octet-stream'},
-      {test: /\.svg(\?v=\d+.\d+.\d+)?$/, loader: 'file-loader?limit=10000&mimetype=image/svg+xml'},
-      {test: /\.(jpe?g|png|gif)$/i, loaders: ['file']},
+      {test: /\.(jpe?g|gif)$/i, loaders: ['file']},
+      {test: /\.svg$/, loader: "url-loader?mimetype=image/svg+xml"},
       {test: /\.ico$/, loader: 'file-loader?name=[name].[ext]'},
       {
         test: /(\.css|\.scss)$/,
