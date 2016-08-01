@@ -30,7 +30,7 @@ class SubmissionTile extends React.Component {
         </div>
         <div className="submission-tile-footer">
           <span>
-            by <Link to={"/submissions/latest/" + submission.submitterName}>{submission.submitterName}</Link>
+            by <Link to={"/user/" + submission.submitterName}>{submission.submitterName}</Link>
           </span>
           <span>
             <button

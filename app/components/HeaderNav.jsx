@@ -7,7 +7,7 @@ import HeaderNavAuth from './HeaderNavAuth';
 const HeaderNav = ({user, logoutHandler}) => {
   return (
     <ul className="header-nav">
-      <li><Link activeClassName="active" to="/" onlyActiveOnIndex={true}>Home</Link></li>
+      <li><Link activeClassName="active" to="/submissions/latest">Home</Link></li>
       <li><Link activeClassName="active" to="/submissions/popular">About</Link></li>
       {user.auth ? <HeaderNavAuth user={user} logoutHandler={logoutHandler}/> : <HeaderNavDefault/>}
     </ul>

@@ -201,13 +201,12 @@ describe('Server API test', function () {
       const bd = new Date(res.body.data[randomIndex].createdAt).toString();
       const fd = new Date(latest[randomIndex].createdAt).toString();
       bd.should.equal(fd)
-      res.body.query.total.should.equal(dummyData.length);
-      res.body.query.queryStr.should.equal("latest/");
+      res.body.total.should.equal(dummyData.length);
       done();
     })
   })
 
-  it('get popular submissions', (done) => {
+  /*it('get popular submissions', (done) => {
     server.get("/api/submissions/popular")
     .end((err, res) => {
       res.type.should.equal('application/json');
@@ -232,20 +231,21 @@ describe('Server API test', function () {
       res.body.data[randomIndex].numLikes.should.equal(popular[randomIndex+10].likes.length)
       done();
     })
-  })
+  })*/
 
-  it('get user latest submissions', (done) => {
-    server.get("/api/submissions/latest/dummy__4")
+  it('get user submissions', (done) => {
+    server.get("/api/submissions/dummy__4")
     .end((err, res) => {
       res.type.should.equal('application/json');
       const filtered = res.body.data.filter((d) => { return d.submitterId === "4"})
       res.body.data.length.should.equal(filtered.length)
-      res.body.query.queryStr.should.equal("latest/dummy__4");
+      const randomIndex = Math.floor(Math.random()*filtered.length);
+      res.body.data[randomIndex].numLikes.should.equal(filtered[randomIndex].likes.length)
       done();
     })
   })
 
-  it('get user popular submissions', (done) => {
+  /*it('get user popular submissions', (done) => {
     server.get("/api/submissions/popular/dummy__5")
     .end((err, res) => {
       res.type.should.equal('application/json');
@@ -258,11 +258,10 @@ describe('Server API test', function () {
       res.body.query.queryStr.should.equal("popular/dummy__5");
       done();
     })
-  })
+  })*/
 
   it('out of submissions', (done) => {
-    server.get("/api/submissions/popular/dummy__2")
-    .send({skip: 20})
+    server.get("/api/submissions/dummy__2?skip=20")
     .end((err, res) => {
       res.type.should.equal('application/json');
       res.body.data.length.should.equal(0);

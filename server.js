@@ -26,6 +26,7 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackConfig from './webpack.config';
 
 const app = express();
+
 ////////////  webpack config  //////////////
 let compiler = webpack(webpackConfig);
 app.use(webpackDevMiddleware(compiler, {
@@ -62,11 +63,10 @@ app.use('/', apiRouter);
 //////////////////////////////////////////
 
 /////////// ssr  ///////////////////////
-app.use("/submissions/:sort?/:user?", (req, res, next) => {
+app.use("/submissions/:user?", (req, res, next) => {
   const submitterName = req.params.user || "";
-  const sort = req.params.sort || "latest";
-  querySubmissions(submitterName, sort).then((response) => {
-      req.submissions = {data: response.data, query: response.query};
+  querySubmissions(submitterName).then((response) => {
+      req.submissions = {data: response.data, total: response.total};
       next()
     }).catch((err) => {
       console.log(err);
@@ -100,5 +100,4 @@ app.use((req, res) => {
 app.listen(serverConfig.PORT, () => {
   console.log("Server listening at port " + serverConfig.PORT);
 })
-
-export default app;
+//export default app;

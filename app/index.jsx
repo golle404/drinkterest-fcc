@@ -6,10 +6,12 @@ import {Router, browserHistory} from 'react-router';
 import getRoutes from './routes';
 
 import configureStore from './store/configureStore';
+import initSocket from './socket/index';
 
 import './../style/style.scss';
 
-const store = configureStore(window.INITIAL_STATE);
+const store = configureStore();
+//initSocket(store);
 
 render(
   <Provider store={store}>

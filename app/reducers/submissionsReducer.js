@@ -2,43 +2,58 @@ import { combineReducers } from "redux";
 import { Map, OrderedSet} from 'immutable';
 import * as actionTypes from '../actions/actionTypes';
 
-function queryUpdater(idx, total = 0){
-  return (v = Map()) => {
-    return v.set("total", total)
-      .update("idx", (v = OrderedSet()) => v.union(OrderedSet(idx)));
-  };
+const dataReducer = (state = Map(), action) => {
+  switch (action.type) {
+    case actionTypes.LOAD_SUBMISSIONS_SUCCESS:
+      return state.merge(action.submissions.entities.data);
+    case actionTypes.CLEAR_SUBMISSIONS:
+      return Map();
+    case actionTypes.ADD_SUBMISSION_SUCCESS:
+    case actionTypes.UPDATE_SUBMISSION_SUCCESS:
+      return state.merge({[action.submission._id]: action.submission});
+    case actionTypes.DELETE_SUBMISSION_SUCCESS:
+      return state.delete(String(action.submission._id));
+    default:
+      return state;
+  }
+};
+
+const submittersReducer = (state = Map(), action) => {
+  switch (action.type) {
+    case actionTypes.LOAD_SUBMISSIONS_SUCCESS:
+      return state.update(action.submitterName, Map(), (v) => {
+        return v.update("idx", OrderedSet(), (i) => {
+          return i.union(action.submissions.result)
+        }).set("total", action.total);
+      })
+    case actionTypes.ADD_SUBMISSION_SUCCESS:
+      return state.update("*", Map(), (v) => {
+        return v.update("idx", OrderedSet(), (i) => {
+          return OrderedSet([action.submission._id]).union(i);
+        }).update("total", 0, (t) => t + 1)
+      }).update(action.submission.submitterName, (v) => {
+        if(!v) return;
+        return v.update("idx", OrderedSet(), (i) => {
+          return OrderedSet([action.submission._id]).union(i)
+        }).update("total", 0, (t) => t + 1)
+      })
+    case actionTypes.DELETE_SUBMISSION_SUCCESS:
+      return state.update("*", Map(), (v) => {
+        return v.update("idx", OrderedSet(), (i) => {
+          return i.delete(action.submission._id);
+        }).update("total", 0, (t) => t - 1)
+      }).update(action.submission.submitterName, (v) => {
+        if(!v) return;
+        return v.update("idx", OrderedSet(), (i) => {
+          return i.delete(action.submission._id);
+        }).update("total", 0, (t) => t - 1)
+      })
+    default:
+      return state;
+  }
 }
 
-const submissionsQueries = (state = Map(), action) => {
-  switch (action.type) {
-    case actionTypes.LOAD_SUBMISSIONS_SUCCESS:
-      return state.update(action.query.queryStr, queryUpdater(action.submissions.result, action.query.total));
-    case actionTypes.ADD_SUBMISSION_SUCCESS:{
-      const submitterName = action.submissions.entities.data[action.submissions.result[0]].submitterName;
-      const newState = state.update('latest/' + submitterName, queryUpdater(action.submissions.result, state.getIn(["latest/" + action.submitterName, "total"]) + 1));
-      return newState.update('latest/', queryUpdater(action.submissions.result, state.getIn(["latest/", "total"]) + 1));
-    }
-    case actionTypes.CLEAR_SUBMISSIONS:
-      return new Map();
-    default:
-      return state;
-  }
-};
-
-const submissionsData = (state = Map(), action) => {
-  switch (action.type) {
-    case actionTypes.LOAD_SUBMISSIONS_SUCCESS:
-      return state.merge(action.submissions.entities.data);
-    case actionTypes.ADD_SUBMISSION_SUCCESS:
-      return state.merge(action.submissions.entities.data);
-    default:
-      return state;
-  }
-};
-
-const submissionsReducer = combineReducers({
-  queries: submissionsQueries,
-  data: submissionsData
+export default combineReducers({
+  data: dataReducer,
+  submitters: submittersReducer
 });
-
-export default submissionsReducer;

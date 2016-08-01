@@ -8,10 +8,16 @@ export function addSubmission(req, res, next){
   submission.likes = [req.user.id];
   submission.createdAt = new Date;
   submission.save((err) => {
-    if(err){
+    /*if(err){
       return res.json({error: err})
     }
-    res.json({submission: submission});
+    res.json({submission: submission});*/
+    if(err){
+      req.response = {error: err};
+    }else{
+      req.response = {submission: submission};
+    }
+    next();
   })
 }
 
@@ -54,38 +60,30 @@ export function deleteSubmission(req, res, next){
 }
 
 export function getSubmissions(req, res, next){
-  const submitterName = req.params.user || "";
-  const sort = req.params.sort || "latest";
+  const submitterName = req.params.submitter || "";
   const skip = parseInt(req.query.skip) || 0;
-  querySubmissions(submitterName, sort, skip).then((response) => {
-      res.json({data: response.data, query: response.query});
+  querySubmissions(submitterName, skip).then((response) => {
+      res.json({data: response.data, total: response.total});
     }).catch((err) => {
       res.json({error: err})
     })
 }
 
-export function querySubmissions(submitterName = "", sort = "latest", skip = 0, cb){
-  let sortBy = {};
+export function querySubmissions(submitterName, skip = 0){
   let query = {}
   if(submitterName){
     query.submitterName = submitterName;
-  }
-  if(sort === "popular"){
-    sortBy.numLikes = -1;
-  }else{
-    sortBy.createdAt = -1;
   }
   return new Promise((resolve, reject) => {
     Submission.find(query).count((err, total) => {
       if(err){
         reject({error: err})
       }
-      Submission.find(query).sort(sortBy).skip(skip).limit(20).lean().exec((err, doc) => {
+      Submission.find(query).sort({createdAt: -1}).skip(skip).limit(20).lean().exec((err, doc) => {
         if(err){
           reject({error: err})
         }
-        const queryStr = sort + "/" + submitterName;
-        resolve({data: doc, query: {total: total, queryStr: queryStr}});
+        resolve({data: doc, total: total});
       })
     })
   })

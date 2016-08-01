@@ -40,106 +40,136 @@ describe("User Reducer", () => {
 
 describe("Submissions Reducer", () => {
 
+const actionDummyData = [
+  {_id: 0, name: "wine"},
+  {_id: 7, name: "rum"},
+  {_id: 12, name: "water"},
+];
+
+const stateDummyData = {
+  data: {
+    '0': { _id: 0, name: 'beer' },
+    '1': { _id: 1, name: 'vodka' },
+    '2': { _id: 2, name: 'whiskey' },
+    '3': { _id: 3, name: 'cider' }
+  },
+  submitters:{
+    '*': {
+      idx: [0, 1, 2, 3],
+      total: 5
+    }
+  }
+};
+const dummySubmissions = normalizeSubmissions(actionDummyData);
+stateDummyData.submitters['*'].idx = OrderedSet(stateDummyData.submitters['*'].idx);
+stateDummyData.submitters = fromJS(stateDummyData.submitters);
+stateDummyData.data = fromJS(stateDummyData.data);
+let newDummy;
+
   it('handles LOAD_SUBMISSIONS_SUCCESS with empty state', () => {
-    const actionData = [
-      {_id: 0, name: "beer"},
-      {_id: 1, name: "vodka"},
-      {_id: 2, name: "whiskey"},
-      {_id: 3, name: "cider"}
-    ];
     const state = {};
     const action = {
       type: actionTypes.LOAD_SUBMISSIONS_SUCCESS,
-      query: {
-        queryStr: "latest/",
-        total: 25
-      }
+      submitterName: "*",
+      total: 25,
+      submissions: dummySubmissions
     };
-    action.submissions = normalizeSubmissions(actionData);
     const nextState = submissionsReducer(state, action);
-    nextState.data.size.should.equal(actionData.length);
-    nextState.data.get("2").toJS().should.deepEqual(actionData[2]);
-    nextState.queries.getIn(["latest/", "total"]).should.deepEqual(action.query.total);
-    nextState.queries.getIn(["latest/", "idx"]).toJS().should.deepEqual([0,1,2,3]);
+    nextState.data.size.should.equal(actionDummyData.length);
+    nextState.data.get("0").toJS().should.deepEqual(actionDummyData[0]);
+    nextState.submitters.getIn(["*", "idx"]).toJS().should.deepEqual([0, 7, 12]);
+    nextState.submitters.getIn(["*", "total"]).should.equal(25);
   });
 
   it('handles LOAD_SUBMISSIONS_SUCCESS with existing state', () => {
-    const actionData = [
-      {_id: 0, name: "wine"},
-      {_id: 7, name: "rum"},
-      {_id: 12, name: "water"},
-    ];
-    const state = {
-      queries: {
-        'latest/': {
-          total: 25,
-          idx: OrderedSet([ 0, 1, 2, 3 ])
-        }
-      },
-      data: {
-        '0': { _id: 0, name: 'beer' },
-        '1': { _id: 1, name: 'vodka' },
-        '2': { _id: 2, name: 'whiskey' },
-        '3': { _id: 3, name: 'cider' }
-      }
-    };
     const action = {
       type: actionTypes.LOAD_SUBMISSIONS_SUCCESS,
-      query: {
-        queryStr: "popular/golle",
-        total: 42
-      }
+      total: 42,
+      submitterName: "*",
+      submissions: dummySubmissions
     };
-    state.queries = fromJS(state.queries);
-    state.data = fromJS(state.data);
-    action.submissions = normalizeSubmissions(actionData);
-    const nextState = submissionsReducer(state, action);
-    //console.log(nextState);
+    const nextState = submissionsReducer(stateDummyData, action);
     nextState.data.size.should.equal(6);
-    nextState.data.get("2").toJS().should.deepEqual({ _id: 2, name: 'whiskey' });
-    nextState.data.get("7").toJS().should.deepEqual(actionData[1]);
-    nextState.data.get("0").toJS().should.deepEqual(actionData[0]);
-    nextState.queries.getIn(["latest/", "total"]).should.equal(25);
-    nextState.queries.getIn(["popular/golle", "idx"]).toJS().should.deepEqual([0, 7, 12]);
+    nextState.data.get("2").toJS().should.deepEqual(stateDummyData.data.get("2").toJS());
+    nextState.data.get("7").toJS().should.deepEqual(actionDummyData[1]);
+    nextState.data.get("0").toJS().should.deepEqual(actionDummyData[0]);
+    nextState.submitters.getIn(["*", "idx"]).toJS().should.deepEqual([0, 1, 2, 3, 7, 12]);
+    nextState.submitters.getIn(["*", "total"]).should.equal(42);
+  });
+
+  it('handles LOAD_SUBMISSIONS_SUCCESS with existing state and new submitter', () => {
+    const action = {
+      type: actionTypes.LOAD_SUBMISSIONS_SUCCESS,
+      total: 42,
+      submitterName: "golle",
+      submissions: dummySubmissions
+    };
+    const nextState = submissionsReducer(stateDummyData, action);
+    //console.log(nextState);
+    newDummy = nextState;
+    nextState.data.size.should.equal(6);
+    nextState.data.get("2").toJS().should.deepEqual(stateDummyData.data.get("2").toJS());
+    nextState.data.get("7").toJS().should.deepEqual(actionDummyData[1]);
+    nextState.data.get("0").toJS().should.deepEqual(actionDummyData[0]);
+    nextState.submitters.getIn(["*", "idx"]).toJS().should.deepEqual([0, 1, 2, 3]);
+    nextState.submitters.getIn(["*", "total"]).should.equal(5);
+    nextState.submitters.getIn(["golle", "idx"]).toJS().should.deepEqual([0, 7, 12]);
+    nextState.submitters.getIn(["golle", "total"]).should.equal(42);
   });
 
   it('handles ADD_SUBMISSION_SUCCESS', () => {
-    const actionData = [
-      {_id: 6, name: "juice", submitterId: "g404", submitterName: "golle"}
-    ];
-    const state = {
-      queries: {
-        'latest/': {
-          total: 25,
-          idx: OrderedSet([ 0, 1, 2, 3 ])
-        },
-        'latest/golle': {
-          total: 12,
-          idx: OrderedSet([ 0, 1])
-        }
-      },
-      data: {
-        '0': { _id: 0, name: 'beer' },
-        '1': { _id: 1, name: 'vodka' },
-        '2': { _id: 2, name: 'whiskey' },
-        '3': { _id: 3, name: 'cider' }
-      }
-    };
     const action = {
       type: actionTypes.ADD_SUBMISSION_SUCCESS,
-      submitterName: actionData[0].submitterName
+      submission: {_id: 6, name: "juice", submitterId: "g404", submitterName: "golle"}
     };
-    state.queries = fromJS(state.queries);
-    state.data = fromJS(state.data);
-    action.submissions = normalizeSubmissions(actionData);
-    const nextState = submissionsReducer(state, action);
+    const nextState = submissionsReducer(newDummy, action);
+    nextState.data.size.should.equal(7);
+    nextState.data.get("2").toJS().should.deepEqual(newDummy.data.get("2").toJS());
+    nextState.data.get("6").toJS().should.deepEqual(action.submission);
+    nextState.submitters.getIn(["*", "idx"]).toJS().should.deepEqual([6, 0, 1, 2, 3]);
+    nextState.submitters.getIn(["*", "total"]).should.equal(6);
+    nextState.submitters.getIn(["golle", "idx"]).toJS().should.deepEqual([6, 0, 7, 12]);
+    nextState.submitters.getIn(["golle", "total"]).should.equal(43);
+  });
+
+  it('handles ADD_SUBMISSION_SUCCESS with non existing submitter', () => {
+    const action = {
+      type: actionTypes.ADD_SUBMISSION_SUCCESS,
+      submission: {_id: 6, name: "juice", submitterId: "g404", submitterName: "golle2"}
+    };
+
+    const nextState = submissionsReducer(newDummy, action);
+    nextState.data.size.should.equal(7);
+    nextState.data.get("2").toJS().should.deepEqual(newDummy.data.get("2").toJS());
+    nextState.data.get("6").toJS().should.deepEqual(action.submission);
+    nextState.submitters.getIn(["*", "idx"]).toJS().should.deepEqual([6, 0, 1, 2, 3]);
+    nextState.submitters.getIn(["*", "total"]).should.equal(6);
+    nextState.submitters.has("golle2").should.equal(false);
+  });
+
+  it('handles UPDATE_SUBMISSION_SUCCESS', () => {
+    const action = {
+      type: actionTypes.UPDATE_SUBMISSION_SUCCESS,
+      submission: {_id: 1, name: "juice", submitterId: "g404", submitterName: "golle"}
+    };
+
+    const nextState = submissionsReducer(stateDummyData, action);
+    nextState.data.size.should.equal(4);
+    nextState.data.get("1").toJS().should.deepEqual(action.submission);
+  });
+
+  it('handles DELETE_SUBMISSION_SUCCESS', () => {
+    const action = {
+      type: actionTypes.DELETE_SUBMISSION_SUCCESS,
+      submission: {_id: 0, submitterName: "golle"}
+    };
+    const nextState = submissionsReducer(newDummy, action);
     nextState.data.size.should.equal(5);
-    nextState.data.get("2").toJS().should.deepEqual({ _id: 2, name: 'whiskey' });
-    nextState.data.get("6").toJS().should.deepEqual(actionData[0]);
-    nextState.queries.getIn(["latest/", "total"]).should.equal(26);
-    nextState.queries.getIn(["latest/", "idx"]).toJS().should.deepEqual([0, 1, 2, 3, 6]);
-    nextState.queries.getIn(["latest/golle", "total"]).should.equal(13);
-    nextState.queries.getIn(["latest/golle", "idx"]).toJS().should.deepEqual([0, 1, 6]);
+    nextState.data.has("0").should.equal(false);
+    nextState.submitters.getIn(["*", "idx"]).toJS().should.deepEqual([1, 2, 3]);
+    nextState.submitters.getIn(["*", "total"]).should.equal(4);
+    nextState.submitters.getIn(["golle", "idx"]).toJS().should.deepEqual([7, 12]);
+    nextState.submitters.getIn(["golle", "total"]).should.equal(41);
   });
 
 });

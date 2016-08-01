@@ -27,7 +27,7 @@ export const userAuthRequest = (profile) => {
       dispatch(userAuthSuccess(json.user));
       dispatch(showNotification({className: "info", message: "Welcome " + json.user.username}));
       browserHistory.push('/profile');
-    })
+    });
   };
 };
 
@@ -42,7 +42,7 @@ export const userLogoutRequest = () => {
       dispatch(showNotification({className: "warning", message: "You are now loged out"}));
       dispatch(userLogoutSuccess(json.user));
       browserHistory.push('/');
-    })
+    });
   };
 };
 
@@ -57,6 +57,6 @@ export const userDeleteRequest = () => {
       dispatch(showNotification({className: "error", message: "Your account is deleted"}));
       dispatch(userDeleteSuccess(json.user));
       browserHistory.push('/');
-    })
+    });
   };
 };

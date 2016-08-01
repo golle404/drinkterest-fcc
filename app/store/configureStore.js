@@ -1,4 +1,4 @@
-import { fromJS, toMap, toOrderedSet, Iterable} from 'immutable';
+import { fromJS, toMap, Map, toOrderedSet, Iterable, OrderedSet} from 'immutable';
 import {createStore, applyMiddleware, compose} from 'redux';
 import rootReducer from '../reducers';
 import thunk from 'redux-thunk';
@@ -9,15 +9,21 @@ export default function configureStore(initState){
     rootReducer,
     toImmutableState(initState),
     compose(
-      applyMiddleware(thunk),
+      applyMiddleware(thunk, normalizeMiddleware),
       (module.hot ? window.devToolsExtension() : f => f )
     )
   );
-}
+};
 
+const normalizeMiddleware = store => next => action => {
+  if(action.submissions){
+    action.submissions = normalizeSubmissions(action.submissions);
+  }
+  next(action);
+};
 
 function toImmutableState(state){
-  const normalizedSubmissions = normalizeSubmissions(state.submissions.data);
+  /*const normalizedSubmissions = normalizeSubmissions(state.submissions.data) || {};
   const immutableSubmissions = fromJS(normalizedSubmissions.entities.data);
   const immutableQueries = fromJS(state.submissions.queries, (key, value) => {
     const isIndexed = Iterable.isIndexed(value);
@@ -28,14 +34,21 @@ function toImmutableState(state){
     className: "",
     message: "",
     active: false
-  })
+  })*/
   return {
-    user: immutableUser,
+    user: Map(),
     submissions: {
-      data: immutableSubmissions,
-      queries: immutableQueries
+      data: Map(),
+      idx: OrderedSet(),
+      total: 0
     },
     numFetchRequests: 0,
-    notification: immutableNotification
+    notification: Map()
   };
+  /*return {
+    user: immutableUser,
+    submissions: Map(),
+    numFetchRequests: 0,
+    notification: immutableNotification
+  };*/
 }

@@ -4,12 +4,12 @@ import {browserHistory} from 'react-router';
 import {fetchData} from './fetchActions';
 import {showNotification} from './notificationActions';
 
-export const loadSubmissionsSuccess = (submissions, query) => {
-  return { type: actionTypes.LOAD_SUBMISSIONS_SUCCESS, submissions, query};
+export const loadSubmissionsSuccess = (submissions, total) => {
+  return { type: actionTypes.LOAD_SUBMISSIONS_SUCCESS, submissions, total};
 };
 
-export const addSubmissionSuccess = (submissions) => {
-  return { type: actionTypes.ADD_SUBMISSION_SUCCESS, submissions};
+export const addSubmissionSuccess = (submission) => {
+  return { type: actionTypes.ADD_SUBMISSION_SUCCESS, submission: submission};
 };
 
 export const clearSubmissions = () => {
@@ -23,8 +23,8 @@ export const loadSubmissionsRequest = (queryString) => {
   };
   return (dispatch) => {
     fetchData('/api/submissions/' + queryString, params, dispatch, (json) => {
-      dispatch(loadSubmissionsSuccess(normalizeSubmissions(json.data), json.query));
-    })
+      dispatch(loadSubmissionsSuccess(json.data, json.total));
+    });
   };
 };
 
@@ -37,12 +37,13 @@ export const addSubmissionRequest = (submission) => {
   };
   return (dispatch) => {
     fetchData('/api/submission', params, dispatch, (json) => {
-      console.log(json);
+      //console.log(json);
+      //dispatch(addSubmissionSuccess(json.submission));
       //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
       dispatch(showNotification({className: "info", message: "Your submission is added"}));
       browserHistory.push("/submissions/latest/" + json.submission.submitterName);
-    })
-  }
+    });
+  };
 };
 
 export const editSubmissionRequest = (submission) => {
@@ -57,8 +58,8 @@ export const editSubmissionRequest = (submission) => {
       //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
       dispatch(showNotification({className: "info", message: "Edit sucessfull"}));
       browserHistory.push("/submissions/recent/" + json.submission.submitterName);
-    })
-  }
+    });
+  };
 };
 
 export const deleteSubmissionRequest = (submissionId) => {
@@ -72,8 +73,8 @@ export const deleteSubmissionRequest = (submissionId) => {
       //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
       dispatch(showNotification({className: "warning", message: "Your submission is deleted"}));
       browserHistory.push("/");
-    })
-  }
+    });
+  };
 };
 
 export const likeSubmissionRequest = (submissionId) => {
@@ -87,6 +88,6 @@ export const likeSubmissionRequest = (submissionId) => {
       //dispatch(showNotification({className: "error", message: "Your like is recieved"}));
       dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
       //browserHistory.push("/submissions/recent/")
-    })
-  }
+    });
+  };
 };

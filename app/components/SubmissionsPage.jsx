@@ -9,8 +9,7 @@ import SubmissionTile from './SubmissionTile';
 class SubmissionsPage extends React.Component {
 
   loadMore(){
-    let queryString = this.props.params.sort || "latest"
-    queryString += "/" + (this.props.params.submitter || "")
+    let queryString = (this.props.params.submitter || "");
     queryString += "?skip=" + this.props.idx.length;
     this.props.dispatch(loadSubmissionsRequest(queryString))
   }
@@ -40,26 +39,15 @@ class SubmissionsPage extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const sort = ownProps.params.sort || "latest";
+
   const submitter = ownProps.params.submitter || "";
-  const query =  sort + "/" + submitter;
-  const submissionQueries = state.submissions.queries.toJS();
-  let submissions = {}
-  if(submissionQueries[query]){
-    submissions.idx = submissionQueries[query].idx;
-    submissions.total = submissionQueries[query].total;
-  }
+  //const submissions = state.submissions.toJS()
   return {
-    submissions: state.submissions.data.toJS(),
-    total: submissions.total || 0,
-    idx: submissions.idx || [],
-    sort: sort,
+    submissions: state.submissions.data.toJS() || {},
+    total: state.submissions.total || 0,
+    idx: state.submissions.idx.toJS() || [],
     submitter: submitter
   }
 }
 
 export default connect(mapStateToProps)(SubmissionsPage);
-
-/*
-data={this.props.submissions} idx={this.props.idx}/>
-*/
