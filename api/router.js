@@ -19,9 +19,30 @@ router.post('/api/submission', isLoggedIn, submissionsController.addSubmission, 
   io.emit('added', {submission: req.response.submission});
   res.json({submission: req.response.submission});
 });
-router.put('/api/like/:submissionId', isLoggedIn, submissionsController.likeSubmission);
-router.put('/api/submission', isLoggedIn, submissionsController.editSubmission);
-router.delete('/api/submission/:submissionId', isLoggedIn, submissionsController.deleteSubmission);
+
+router.put('/api/like/:submissionId', isLoggedIn, submissionsController.likeSubmission, (req, res) => {
+  if(req.response.error){
+    return res.json({error: req.response.error})
+  }
+  io.emit('edit', {submission: req.response.submission});
+  res.json({submission: req.response.submission});
+});
+
+router.put('/api/submission', isLoggedIn, submissionsController.editSubmission, (req, res) => {
+  if(req.response.error){
+    return res.json({error: req.response.error})
+  }
+  io.emit('edit', {submission: req.response.submission});
+  res.json({submission: req.response.submission});
+});
+
+router.delete('/api/submission/:submissionId', isLoggedIn, submissionsController.deleteSubmission, (req, res) => {
+  if(req.response.error){
+    return res.json({error: req.response.error})
+  }
+  io.emit('delete', {submission: req.response.submission});
+  res.json({submission: req.response.submission});
+});
 
 router.get('/api/submissions/:submitter?', submissionsController.getSubmissions);
 // for testing purposis only - loads random data from reddit//

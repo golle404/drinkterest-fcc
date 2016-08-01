@@ -98,7 +98,7 @@
     }
     &:before{
       content: "";
-      background-image: url("svg/ic_favorite_red_24px.svg");
+      background-image: url("svg/ic_favorite_border_red_24px.svg");
       background-size: cover;
       width: 1em;
       height: 1em;
@@ -111,7 +111,7 @@
     }
     &.voted{
       &:before{
-        background-image: url("svg/ic_favorite_border_red_24px.svg");
+        background-image: url("svg/ic_favorite_red_24px.svg");
       }
     }
   }

@@ -33,37 +33,63 @@ export function likeSubmission(req, res, next){
       submission.likes.push(req.user.id)
     }
     submission.save((err) => {
-      if(err){
+      /*if(err){
         return res.json({error: err})
       }
-      res.json({submission: submission})
+      res.json({submission: submission})*/
+      if(err){
+        req.response = {error: err};
+      }else{
+        req.response = {submission: submission};
+      }
+      next();
     })
   })
 }
 
 export function editSubmission(req, res, next){
   Submission.findByIdAndUpdate(req.body.id, req.body, {new: true}, (err, submission) => {
-    if(err){
+    /*if(err){
       return res.json({error: err})
     }
-    res.json({submission: submission});
+    res.json({submission: submission});*/
+    if(err){
+      req.response = {error: err};
+    }else{
+      req.response = {submission: submission};
+    }
+    next();
   })
 }
 
 export function deleteSubmission(req, res, next){
-  Submission.remove({_id: req.params.submissionId}, (err) => {
+  Submission.findByIdAndRemove(req.params.submissionId, (err, doc) => {
     if(err){
+      req.response = {error: err};
+    }else{
+      req.response = {success: true, submission: doc};
+    }
+    next();
+  })
+  /*Submission.remove({_id: req.params.submissionId}, (err) => {
+    /*if(err){
       return res.json({error: err})
     }
     res.json({success: true});
-  })
+    if(err){
+      req.response = {error: err};
+    }else{
+      req.response = {success: true};
+    }
+    next();
+  })*/
 }
 
 export function getSubmissions(req, res, next){
   const submitterName = req.params.submitter || "";
   const skip = parseInt(req.query.skip) || 0;
   querySubmissions(submitterName, skip).then((response) => {
-      res.json({data: response.data, total: response.total});
+      res.json({data: response.data, total: response.total, submitter: response.submitter});
     }).catch((err) => {
       res.json({error: err})
     })
@@ -83,7 +109,7 @@ export function querySubmissions(submitterName, skip = 0){
         if(err){
           reject({error: err})
         }
-        resolve({data: doc, total: total});
+        resolve({data: doc, total: total, submitter:submitterName || "*"});
       })
     })
   })

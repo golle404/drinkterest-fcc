@@ -11,7 +11,7 @@ import initSocket from './socket/index';
 import './../style/style.scss';
 
 const store = configureStore();
-//initSocket(store);
+initSocket(store);
 
 render(
   <Provider store={store}>

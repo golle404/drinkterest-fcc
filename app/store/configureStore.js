@@ -39,8 +39,7 @@ function toImmutableState(state){
     user: Map(),
     submissions: {
       data: Map(),
-      idx: OrderedSet(),
-      total: 0
+      submitters: Map()
     },
     numFetchRequests: 0,
     notification: Map()

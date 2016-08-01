@@ -39,14 +39,14 @@ class SubmissionsPage extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-
-  const submitter = ownProps.params.submitter || "";
-  //const submissions = state.submissions.toJS()
+  const submitterName = ownProps.params.submitter || "*";
+  const data = state.submissions.data.toJS() || {}
+  const submitters = state.submissions.submitters.toJS() || {}
+  const submitter = submitters[submitterName] || {}
   return {
-    submissions: state.submissions.data.toJS() || {},
-    total: state.submissions.total || 0,
-    idx: state.submissions.idx.toJS() || [],
-    submitter: submitter
+    submissions: data,
+    idx: submitter.idx || [],
+    total: submitter.total || 0
   }
 }
 

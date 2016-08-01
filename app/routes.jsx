@@ -14,18 +14,10 @@ import {loadSubmissionsRequest, clearSubmissions} from './actions/submissionsAct
 export default function getRoutes(store){
 
   const loadSubmissions = (nextState, replace) => {
-    //console.log(nextState.params.submitter || "");
-    store.dispatch(clearSubmissions());
-    store.dispatch(loadSubmissionsRequest(nextState.params.submitter || ""));
-    /*const queryParams = {
-      submitterName: nextState.params.submitter || "",
-      sort: nextState.params.sort || "latest"
+    const submitter = nextState.params.submitter || "*";
+    if(!store.getState().submissions.submitters.has(submitter)){
+      store.dispatch(loadSubmissionsRequest(nextState.params.submitter || ""));
     }
-    const queryString = queryParams.sort + "/" + queryParams.submitterName;
-    const query = store.getState().submissions.queries.get(queryString);
-    if(!query || query.get("total") === -1){
-      store.dispatch(loadSubmissionsRequest(queryString))
-    }*/
   }
 
   const requestAuthentication = (nextState, replace) => {
@@ -44,5 +36,4 @@ export default function getRoutes(store){
       <Route path="auth/:method" component={AuthenticationPage} />
     </Route>
   )
-
 };
