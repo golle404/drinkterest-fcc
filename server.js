@@ -63,7 +63,7 @@ app.use('/', apiRouter);
 //////////////////////////////////////////
 
 /////////// ssr  ///////////////////////
-app.use("/user/:submitterName", (req, res, next) => {
+app.use(["/", "/user/:submitterName"], (req, res, next) => {
   const submitterName = req.params.submitterName || "";
   querySubmissions(submitterName).then((response) => {
       req.submissions = {data: response.data, total: response.total, submitter: response.submitter};
@@ -99,4 +99,3 @@ app.use((req, res) => {
 app.listen(serverConfig.PORT, () => {
   console.log("Server listening at port " + serverConfig.PORT);
 })
-//export default app;

@@ -7,7 +7,7 @@ const About = () => {
         <a href="https://www.freecodecamp.com/challenges/build-a-pinterest-clone"> "Build a Pinterest Clone" </a>
          challenge
       </p>
-      <p>With DRINKTEREST App users can view submissions by other users, can vote on dink submission, and submit their own favorite drinks.</p>
+      <p>With DRINKTEREST App users can view submissions by other users, can vote on drink submission, and submit their own favorite drinks.</p>
       <p>
         <a href="https://www.freecodecamp.com">FreeCodeCamp </a> is an open source community that helps you learn to code.
       </p>
