@@ -119,7 +119,7 @@ let newDummy;
 
   it('handles ADD_SUBMISSION_SUCCESS', () => {
     const action = {
-      type: actionTypes.ADD_SUBMISSION_SUCCESS,
+      type: actionTypes.ADD_SUBMISSION,
       submission: {_id: 6, name: "juice", submitterId: "g404", submitterName: "golle"}
     };
     const nextState = submissionsReducer(newDummy, action);
@@ -134,7 +134,7 @@ let newDummy;
 
   it('handles ADD_SUBMISSION_SUCCESS with non existing submitter', () => {
     const action = {
-      type: actionTypes.ADD_SUBMISSION_SUCCESS,
+      type: actionTypes.ADD_SUBMISSION,
       submission: {_id: 6, name: "juice", submitterId: "g404", submitterName: "golle2"}
     };
 
@@ -149,7 +149,7 @@ let newDummy;
 
   it('handles UPDATE_SUBMISSION_SUCCESS', () => {
     const action = {
-      type: actionTypes.UPDATE_SUBMISSION_SUCCESS,
+      type: actionTypes.UPDATE_SUBMISSION,
       submission: {_id: 1, name: "juice", submitterId: "g404", submitterName: "golle"}
     };
 
@@ -160,7 +160,7 @@ let newDummy;
 
   it('handles DELETE_SUBMISSION_SUCCESS', () => {
     const action = {
-      type: actionTypes.DELETE_SUBMISSION_SUCCESS,
+      type: actionTypes.DELETE_SUBMISSION,
       submission: {_id: 0, submitterName: "golle"}
     };
     const nextState = submissionsReducer(newDummy, action);

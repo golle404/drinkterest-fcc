@@ -7,11 +7,11 @@ class Notification extends React.Component {
   componentDidUpdate(prevProps){
     if(this.props.active){
       setTimeout(this.hide.bind(this), 2000);
-    };
+    }
   }
 
   hide(){
-    this.props.dispatch(hideNotification())
+    this.props.dispatch(hideNotification());
   }
 
   render () {
@@ -22,16 +22,23 @@ class Notification extends React.Component {
           {message}
         </div>
       </div>
-    )
+    );
   }
 }
 
+Notification.propTypes = {
+  message: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
+  active: PropTypes.bool.isRequired,
+  dispatch: PropTypes.func.isRequired
+};
+
 const mapStateToProps = (state) => {
   return {
-    message: state.notification.get("message"),
-    className: state.notification.get("className"),
-    active: state.notification.get("active"),
-  }
-}
+    message: state.notification.get("message") || "",
+    className: state.notification.get("className") || "",
+    active: state.notification.get("active") || false
+  };
+};
 
 export default connect(mapStateToProps)(Notification);

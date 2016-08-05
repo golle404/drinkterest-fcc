@@ -3,16 +3,15 @@ export default function generateInitialState(isAuthenticated, _user, _submission
 
   if(isAuthenticated){
     user.id = _user._id;
-    user.username = _user.local.username;
+    user.username = _user.username;
     user.auth = true;
   }
-  let submissions ={data:{}, queries:{}};
+  let submissions ={data: []};
 
   if(_submissions){
     submissions.data = _submissions.data;
     submissions.total = _submissions.total;
-    //submissions.queries[_submissions.query.queryStr] = {total: _submissions.query.total};
-    //submissions.queries[_submissions.query.queryStr].idx = _submissions.data.map((v) => {return v._id;});
+    submissions.submitter = _submissions.submitter;
   }
 
   return {

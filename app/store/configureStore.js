@@ -13,7 +13,7 @@ export default function configureStore(initState){
       (module.hot ? window.devToolsExtension() : f => f )
     )
   );
-};
+}
 
 const normalizeMiddleware = store => next => action => {
   if(action.submissions){
@@ -23,31 +23,25 @@ const normalizeMiddleware = store => next => action => {
 };
 
 function toImmutableState(state){
-  /*const normalizedSubmissions = normalizeSubmissions(state.submissions.data) || {};
-  const immutableSubmissions = fromJS(normalizedSubmissions.entities.data);
-  const immutableQueries = fromJS(state.submissions.queries, (key, value) => {
-    const isIndexed = Iterable.isIndexed(value);
-    return isIndexed ? value.toOrderedSet() : value.toMap();
-  });
+  const normalizedSubmissions = normalizeSubmissions(state.submissions.data) || {};
+  const immutableData = fromJS(normalizedSubmissions.entities.data);
+  const immutableSubmitters = fromJS({[state.submissions.submitter]: {
+    idx: OrderedSet(normalizedSubmissions.result),
+    total: state.submissions.total
+  }});
   const immutableUser = fromJS(state.user);
   const immutableNotification = fromJS({
     className: "",
     message: "",
     active: false
-  })*/
+  });
   return {
-    user: Map(),
+    user: immutableUser,
     submissions: {
-      data: Map(),
-      submitters: Map()
+      data: immutableData,
+      submitters: immutableSubmitters
     },
     numFetchRequests: 0,
-    notification: Map()
-  };
-  /*return {
-    user: immutableUser,
-    submissions: Map(),
-    numFetchRequests: 0,
     notification: immutableNotification
-  };*/
+  };
 }

@@ -18,9 +18,9 @@
     ]
   },
   "scripts": {
-    "start:dev": "node-dev --debug index.js",
+    "start:dev": "node-dev --notify index.js",
     "start": "npm-run-all --parallel lint:watch start:dev",
-    "lint": "node_modules/.bin/esw webpack.config.* app utils",
+    "lint": "node_modules/.bin/esw webpack.config.* --ext .js --ext .jsx app utils api controllers models",
     "lint:watch": "npm run lint -- --watch",
     "test": "npm run test:reducers",
     "test:server": "mocha tests --recursive --compilers js:babel-register",
@@ -42,7 +42,9 @@
     "node-fetch": "^1.5.3",
     "normalizr": "^2.1.0",
     "passport": "^0.3.2",
+    "passport-github2": "^0.1.10",
     "passport-local": "^1.0.0",
+    "passport-twitter": "^1.0.4",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
     "react-redux": "^4.4.5",

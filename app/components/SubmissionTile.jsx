@@ -3,17 +3,24 @@ import {connect} from 'react-redux';
 import {likeSubmissionRequest, deleteSubmissionRequest} from './../actions/submissionsActions';
 
 import {Link} from 'react-router';
-import SubmissionToolbar from './SubmissionToolbar';
+import SubmissionToolbar from './SubmissionToolbar.jsx';
 
 class SubmissionTile extends React.Component {
 
+  constructor(props){
+    super(props);
+    this.likeRequest = this.likeRequest.bind(this);
+    this.deleteRequest = this.deleteRequest.bind(this);
+  }
+
   likeRequest(){
-    this.props.dispatch(likeSubmissionRequest(this.props.submission._id))
+    this.props.dispatch(likeSubmissionRequest(this.props.submission._id));
   }
 
   deleteRequest(){
     this.props.dispatch(deleteSubmissionRequest(this.props.submission._id));
   }
+
   render () {
     const submission = this.props.submission;
     const user = this.props.user;
@@ -36,22 +43,29 @@ class SubmissionTile extends React.Component {
             <button
               className={"btn like-button " + (voted ? "voted" : "")}
               disabled={!user.auth}
-              onClick={this.likeRequest.bind(this)}>
+              onClick={this.likeRequest}>
               {submission.numLikes}
             </button>
           </span>
         </div>
         {submission.submitterId != user.id || <SubmissionToolbar
-          onDelete={this.deleteRequest.bind(this)}
+          deleteRequest={this.deleteRequest}
           id={submission._id}/>}
       </div>
-    )
+    );
   }
 }
+
+SubmissionTile.propTypes = {
+  user: PropTypes.object.isRequired,
+  submission: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired
+};
 
 const mapStateToProps = (state) => {
   return {
     user: state.user.toJS()
-  }
-}
+  };
+};
+
 export default connect(mapStateToProps)(SubmissionTile);

@@ -4,19 +4,20 @@ class FormInputGroup extends React.Component {
   constructor(props){
     super(props);
     const isDirty = props.defaultValue && props.defaultValue.length != 0;
-    this.state={isDirty: isDirty}
+    this.state={isDirty: isDirty};
+    this.inputChange = this.inputChange.bind(this);
   }
 
   componentWillReceiveProps(){
     for(const ref in this.refs){
       this.refs[ref].value = "";
     }
-    this.setState({isDirty: false})
+    this.setState({isDirty: false});
   }
 
   inputChange(){
     if((this.refs.input.value.length !== 0) !== this.state.isDirty){
-      this.setState({isDirty: !this.state.isDirty})
+      this.setState({isDirty: !this.state.isDirty});
     }
   }
 
@@ -32,12 +33,12 @@ class FormInputGroup extends React.Component {
           required={required}
           defaultValue={defaultValue || ""}
           className={this.state.isDirty ? "dirty" : ""}
-          onChange={this.inputChange.bind(this)}/>
+          onChange={this.inputChange}/>
         <label
           htmlFor={id}>{label}</label>
         <hr/>
       </div>
-    )
+    );
   }
 }
 
@@ -48,6 +49,6 @@ FormInputGroup.propTypes = {
   required: PropTypes.bool,
   label: PropTypes.string,
   defaultValue: PropTypes.string
-}
+};
 
 export default FormInputGroup;

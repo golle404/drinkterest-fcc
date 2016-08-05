@@ -8,20 +8,16 @@ export const loadSubmissionsSuccess = (submissions, total, submitterName) => {
   return { type: actionTypes.LOAD_SUBMISSIONS_SUCCESS, submissions, total, submitterName};
 };
 
-export const addSubmissionSuccess = (submission) => {
-  return { type: actionTypes.ADD_SUBMISSION_SUCCESS, submission: submission};
+export const addSubmission = (submission) => {
+  return { type: actionTypes.ADD_SUBMISSION, submission: submission};
 };
 
-export const updateSubmissionSuccess = (submission) => {
-  return { type: actionTypes.UPDATE_SUBMISSION_SUCCESS, submission: submission};
+export const updateSubmission = (submission) => {
+  return { type: actionTypes.UPDATE_SUBMISSION, submission: submission};
 };
 
-export const deleteSubmissionSuccess = (submission) => {
-  return { type: actionTypes.DELETE_SUBMISSION_SUCCESS, submission: submission};
-};
-
-export const clearSubmissions = () => {
-  return { type: actionTypes.CLEAR_SUBMISSIONS};
+export const deleteSubmission = (submission) => {
+  return { type: actionTypes.DELETE_SUBMISSION, submission: submission};
 };
 
 export const loadSubmissionsRequest = (queryString) => {
@@ -45,11 +41,7 @@ export const addSubmissionRequest = (submission) => {
   };
   return (dispatch) => {
     fetchData('/api/submission', params, dispatch, (json) => {
-      //console.log(json);
-      //dispatch(addSubmissionSuccess(json.submission));
-      //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
       dispatch(showNotification({className: "info", message: "Your submission is added"}));
-      //browserHistory.push("/user/" + json.submission.submitterName);
       browserHistory.push("/");
     });
   };
@@ -64,7 +56,6 @@ export const editSubmissionRequest = (submission) => {
   };
   return (dispatch) => {
     fetchData('/api/submission', params, dispatch, (json) => {
-      //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
       dispatch(showNotification({className: "info", message: "Edit sucessfull"}));
       browserHistory.push("/user/" + json.submission.submitterName);
     });
@@ -79,9 +70,7 @@ export const deleteSubmissionRequest = (submissionId) => {
   };
   return (dispatch) => {
     fetchData('/api/submission/' + submissionId, params, dispatch, (json) => {
-      //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
       dispatch(showNotification({className: "warning", message: "Your submission is deleted"}));
-      //browserHistory.push("/");
     });
   };
 };
@@ -95,8 +84,6 @@ export const likeSubmissionRequest = (submissionId) => {
   return (dispatch) => {
     fetchData('/api/like/' + submissionId, params, dispatch, (json) => {
       //dispatch(showNotification({className: "error", message: "Your like is recieved"}));
-      //dispatch(addSubmissionSuccess(normalizeSubmissions([json.submission])));
-      //browserHistory.push("/submissions/recent/")
     });
   };
 };

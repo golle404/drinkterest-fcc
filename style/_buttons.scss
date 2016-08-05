@@ -56,5 +56,39 @@
     font-size: .7em;
     padding: 5px 8px;
   }
+}
+.icon-button{
+  width: 24px;
+  height: 24px;
+  background-size: contain;
+  background-position: center;
+  margin: 4px;
+  &.icon-codepen{
+    background-image: url("svg/codepen-icon.svg");
+  }
+  &.icon-github{
+    background-image: url("svg/github-icon.svg");
+  }
+  &.icon-twitter{
+    background-image: url("svg/twitter-icon.svg");
+  }
 
+}
+
+.btn-auth:before{
+  content: "";
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  vertical-align: sub;
+  margin-right: 8px;
+  background-size: contain;
+  background-position: center;
+}
+.auth-twitter:before{
+  background-image: url("svg/twitter-icon.svg");
+}
+
+.auth-github:before{
+  background-image: url("svg/github-icon.svg");
 }

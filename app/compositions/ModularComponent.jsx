@@ -2,8 +2,7 @@ import React, { PropTypes } from 'react';
 import {findDOMNode} from 'react-dom';
 
 const ModularComponent = (Composed) => {
-  return class extends React.Component {
-    //static displayName = 'ModularComponent';
+  return class Modular extends React.Component {
 
     constructor(props) {
        super(props);
@@ -12,9 +11,15 @@ const ModularComponent = (Composed) => {
        this.getElement = this.getElement.bind(this);
     }
 
+    static propTypes(){
+      return {
+        breakPoints: PropTypes.array.isRequired
+      };
+    }
+
     componentDidMount(){
       window.addEventListener('resize', this.handleResize);
-      this.handleResize()
+      this.handleResize();
     }
     componentWillUnmount(){
       window.removeEventListener('resize', this.handleResize);
@@ -23,14 +28,14 @@ const ModularComponent = (Composed) => {
     handleResize(){
       const queryIndex = this.getQueryIndex(findDOMNode(this).offsetWidth);
       if(queryIndex !== this.state.queryIndex){
-      	this.setState({queryIndex: queryIndex});
+        this.setState({queryIndex: queryIndex});
       }
     }
 
     getQueryIndex(w){
       return this.props.breakPoints.reduceRight( (p, c, i) => {
-    	 return c < w ? p : i;
-     }, this.props.breakPoints.length);
+        return c < w ? p : i;
+      }, this.props.breakPoints.length);
     }
 
     getElement(){
@@ -38,9 +43,10 @@ const ModularComponent = (Composed) => {
     }
 
     render () {
-      return <Composed ref="container" {...this.props} {...this.state} />
+      return <Composed ref="container" {...this.props} {...this.state} />;
     }
-  }
-}
+
+  };
+};
 
 export default ModularComponent;

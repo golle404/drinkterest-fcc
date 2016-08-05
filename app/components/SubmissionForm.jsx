@@ -2,9 +2,14 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import {addSubmissionRequest, editSubmissionRequest} from './../actions/submissionsActions';
 
-import FormInputGroup from './FormInputGroup';
+import FormInputGroup from './FormInputGroup.jsx';
 
 class SubmissionForm extends React.Component {
+
+  constructor(props){
+      super(props);
+      this.onFormSubmit = this.onFormSubmit.bind(this);
+  }
 
   onFormSubmit(e){
     e.preventDefault();
@@ -13,11 +18,11 @@ class SubmissionForm extends React.Component {
       url: this.refs.url.refs.input.value,
       image: this.refs.image.refs.input.value,
       id: this.props.submission._id
-    }
+    };
     if(newDrink.id){
-      this.props.dispatch(editSubmissionRequest(newDrink))
+      this.props.dispatch(editSubmissionRequest(newDrink));
     }else{
-      this.props.dispatch(addSubmissionRequest(newDrink))
+      this.props.dispatch(addSubmissionRequest(newDrink));
     }
   }
 
@@ -32,14 +37,14 @@ class SubmissionForm extends React.Component {
           </div>
         </div>
         <div className="form-body">
-          <form onSubmit={this.onFormSubmit.bind(this)}>
+          <form onSubmit={this.onFormSubmit}>
             <FormInputGroup
               id="name"
               ref="name"
               label="Name"
               type="text"
-              autoFocus={true}
-              required={true}
+              autoFocus
+              required
               defaultValue={name} />
             <FormInputGroup
               id="url"
@@ -52,7 +57,7 @@ class SubmissionForm extends React.Component {
               ref="image"
               label="Image src"
               type="text"
-              required={true}
+              required
               defaultValue={image} />
               <div className="form-input-group center-align">
                 <button type="submit" className="btn btn-primary">
@@ -62,18 +67,19 @@ class SubmissionForm extends React.Component {
           </form>
         </div>
       </div>
-    )
+    );
   }
 }
 
 SubmissionForm.propTypes = {
-  submission: PropTypes.object
-}
+  submission: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired
+};
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    submission: state.submissions.data.toJS()[ownProps.params.id] || {}
-  }
-}
+    submission: ownProps.params.id ? state.submissions.data.get(ownProps.params.id).toJS() : {}
+  };
+};
 
 export default connect(mapStateToProps)(SubmissionForm);

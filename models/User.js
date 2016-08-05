@@ -8,10 +8,9 @@ const schemaOptions = {
 };
 
 let userSchema = new Schema({
-  local: {
-    username: String,
-    password: String
-  }
+  username: String,
+  password: String,
+  oauthToken: String
 }, schemaOptions);
 
 userSchema.methods.generateHash = function(password) {
@@ -19,7 +18,7 @@ userSchema.methods.generateHash = function(password) {
 };
 
 userSchema.methods.validPassword = function(password) {
-    return bcrypt.compareSync(password, this.local.password);
+    return bcrypt.compareSync(password, this.password);
 };
 
 const User = mongoose.model('User', userSchema);

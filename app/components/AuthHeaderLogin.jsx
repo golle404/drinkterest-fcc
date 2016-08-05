@@ -11,7 +11,7 @@ const AuthHeaderLogin = () => {
         <Link to="/auth/register">Register</Link>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default AuthHeaderLogin;

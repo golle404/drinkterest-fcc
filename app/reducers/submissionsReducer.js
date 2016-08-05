@@ -6,12 +6,10 @@ const dataReducer = (state = Map(), action) => {
   switch (action.type) {
     case actionTypes.LOAD_SUBMISSIONS_SUCCESS:
       return state.merge(action.submissions.entities.data);
-    case actionTypes.CLEAR_SUBMISSIONS:
-      return Map();
-    case actionTypes.ADD_SUBMISSION_SUCCESS:
-    case actionTypes.UPDATE_SUBMISSION_SUCCESS:
+    case actionTypes.ADD_SUBMISSION:
+    case actionTypes.UPDATE_SUBMISSION:
       return state.merge({[action.submission._id]: action.submission});
-    case actionTypes.DELETE_SUBMISSION_SUCCESS:
+    case actionTypes.DELETE_SUBMISSION:
       return state.delete(String(action.submission._id));
     default:
       return state;
@@ -26,7 +24,7 @@ const submittersReducer = (state = Map(), action) => {
           return i.union(action.submissions.result);
         }).set("total", action.total);
       });
-    case actionTypes.ADD_SUBMISSION_SUCCESS:
+    case actionTypes.ADD_SUBMISSION:
       return state.update("*", (v) => {
         if(!v) return;
         return v.update("idx", OrderedSet(), (i) => {
@@ -38,7 +36,7 @@ const submittersReducer = (state = Map(), action) => {
           return OrderedSet([action.submission._id]).union(i);
         }).update("total", 0, (t) => t + 1);
       });
-    case actionTypes.DELETE_SUBMISSION_SUCCESS:
+    case actionTypes.DELETE_SUBMISSION:
       return state.update("*", (v) => {
         if(!v) return;
         return v.update("idx", OrderedSet(), (i) => {

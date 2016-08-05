@@ -18,12 +18,12 @@ const submissionSchema = new Schema({
 }, schemaOptions);
 
 submissionSchema.pre('save', function(next){
-  var drink = this;
+  let drink = this;
   if(drink.isModified("likes")){
     drink.numLikes = drink.likes.length;
   }
   next();
-})
+});
 const Submission = mongoose.model('Submission', submissionSchema);
 
 export default Submission;

@@ -2,12 +2,16 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import {userLogoutRequest} from './../actions/authActions';
 
-import HeaderBrand from './HeaderBrand';
-import HeaderNav from './HeaderNav';
-
-import Spinner from './Spinner';
+import HeaderBrand from './HeaderBrand.jsx';
+import HeaderNav from './HeaderNav.jsx';
+import Spinner from './Spinner.jsx';
 
 class Header extends React.Component {
+
+  constructor(props){
+    super(props);
+    this.handleLogout = this.handleLogout.bind(this);
+  }
 
   handleLogout(){
     this.props.dispatch(userLogoutRequest());
@@ -22,22 +26,24 @@ class Header extends React.Component {
             <Spinner active={isFetching}/>
           </div>
           <div>
-            <HeaderNav user={user} logoutHandler={this.handleLogout.bind(this)}/>
+            <HeaderNav user={user} logoutHandler={this.handleLogout}/>
           </div>
         </header>
-    )
+    );
   }
 }
 
 Header.propTypes = {
-  user: PropTypes.object
-}
+  user: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool.isRequired
+};
 
 const mapStateToProps = (state) => {
   return {
     user: state.user.toJS(),
     isFetching: state.numFetchRequests > 0
-  }
-}
+  };
+};
 
 export default connect(mapStateToProps)(Header);

@@ -1,15 +1,15 @@
 import React, { PropTypes } from 'react';
-import ModularComponent from './../compositions/ModularComponent';
+import ModularComponent from './../compositions/ModularComponent.jsx';
 
 class Masonry extends React.Component {
 
-  mapChildren(){
+  mapChildren({queryIndex, children}){
 		let col = [];
-		const numC = this.props.queryIndex + 1;
+		const numC = queryIndex + 1;
 		for(let i = 0; i < numC; i++){
 			col.push([]);
 		}
-		return this.props.children.reduce((p,c,i) => {
+		return children.reduce((p,c,i) => {
 			p[i%numC].push(c);
 			return p;
 		}, col);
@@ -18,36 +18,25 @@ class Masonry extends React.Component {
   render () {
     return (
       <div className="masonry">
-        {this.mapChildren().map((col, ci) => {
+        {this.mapChildren(this.props).map((col, ci) => {
           return (
             <div className="masonry-column" key={ci} >
               {col.map((entry, i) => {
                 return (
                   <div key={i}>{entry}</div>
-                )
+                );
               })}
             </div>
-          )
+          );
         })}
       </div>
-    )
+    );
   }
 }
 
-export default ModularComponent(Masonry);
+Masonry.propTypes = {
+  children: PropTypes.array.isRequired,
+  queryIndex: PropTypes.number.isRequired
+};
 
-/*
-{this.mapChildren().map((col, ci) => {
-  return (
-    <div className="masonry__column" key={ci} >
-      {col.map((entry, i) => {
-        return (
-          <div key={i} className="card hoverable">
-            <Tile entry={entry}/>
-          </div>
-        )
-      })}
-    </div>
-  )
-})}
-*/
+export default ModularComponent(Masonry);

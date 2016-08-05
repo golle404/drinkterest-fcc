@@ -17,7 +17,7 @@ import logger from 'morgan';
 import apiRouter from './api/router';
 import {querySubmissions} from './controllers/submissionsController';
 
-//import generateHtml from './utils/generateHtml';
+import generateHtml from './utils/generateHtml';
 import generateInitialState from './utils/generateInitialState';
 
 import webpack from 'webpack';
@@ -63,10 +63,10 @@ app.use('/', apiRouter);
 //////////////////////////////////////////
 
 /////////// ssr  ///////////////////////
-app.use("/submissions/:user?", (req, res, next) => {
-  const submitterName = req.params.user || "";
+app.use("/user/:submitterName", (req, res, next) => {
+  const submitterName = req.params.submitterName || "";
   querySubmissions(submitterName).then((response) => {
-      req.submissions = {data: response.data, total: response.total};
+      req.submissions = {data: response.data, total: response.total, submitter: response.submitter};
       next()
     }).catch((err) => {
       console.log(err);
@@ -76,8 +76,7 @@ app.use("/submissions/:user?", (req, res, next) => {
 
 app.use((req, res) => {
   const initialState = generateInitialState(req.isAuthenticated(), req.user, req.submissions);
-  res.render("index", {initialState: initialState, html: ""});
-  /*generateHtml(initialState, req.url).then((response) => {
+  generateHtml(initialState, req.url).then((response) => {
     res.render("index", {initialState: initialState, html: response});
   }).catch((error) => {
     switch (error.status) {
@@ -94,7 +93,7 @@ app.use((req, res) => {
       default:
         res.sendStatus(404);
     }
-  })*/
+  })
 });
 
 app.listen(serverConfig.PORT, () => {

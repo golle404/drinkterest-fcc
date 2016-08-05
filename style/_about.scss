@@ -1,0 +1,47 @@
+.container-about{
+  @include card(2);
+  max-width: 800px;
+  width: 80%;
+  margin: auto;
+  padding: 1em;
+  p{
+    padding: 1em;
+    line-height: 125%;
+  }
+  ul{
+    padding: 1em;
+  }
+  li{
+    display: block;
+  }
+  h3{
+    text-align: center;
+    font-size: 1.5em;
+  }
+  h4{
+    font-size: 1.2em;
+    padding: .2em .5em;
+  }
+  a{
+    color: $accent-color;
+    font-weight: 900;
+    padding: 2px 4px;
+    display: inline-block;
+    &:hover{
+      background-color: $accent-color;
+      color: $whitey;
+    }
+  }
+}
+.about-tools{
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding-top: 1em;
+}
+.about-block{
+  flex-grow: 1;
+  &:not(:last-child){
+    border-right: 1px solid $gray-soft;
+  }
+}

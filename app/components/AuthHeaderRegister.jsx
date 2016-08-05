@@ -11,7 +11,7 @@ const AuthHeaderRegister = () => {
         <span>Register</span>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default AuthHeaderRegister;
