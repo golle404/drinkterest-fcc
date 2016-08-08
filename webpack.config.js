@@ -12,9 +12,9 @@ const config = {
     './app/index'
   ],
   output: {
-    path: path.join(__dirname, 'public', 'js'),
+    path: path.join(__dirname, 'public'),
     filename: 'bundle.js',
-    publicPath: '/js'
+    publicPath: '/public'
   },
   resolve: {
     extensions: ['', '.js', '.jsx']

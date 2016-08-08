@@ -28,14 +28,17 @@ import webpackConfig from './webpack.config';
 const app = express();
 
 ////////////  webpack config  //////////////
-let compiler = webpack(webpackConfig);
-app.use(webpackDevMiddleware(compiler, {
-  noInfo: true,
-  publicPath: webpackConfig.output.publicPath
-}))
-app.use(webpackHotMiddleware(compiler));
-///////////////////////////////////////////
-app.use(logger("dev"));
+const prod = process.env.NODE_ENV === 'production'
+if(!prod){
+  let compiler = webpack(webpackConfig);
+  app.use(webpackDevMiddleware(compiler, {
+    noInfo: true,
+    publicPath: webpackConfig.output.publicPath
+  }))
+  app.use(webpackHotMiddleware(compiler));
+
+}
+  app.use(logger("dev"));
 /////////  connect database  //////////////
 mongoose.connect(serverConfig.MONGO_PATH);
 mongoose.connection.on("error", () => {
@@ -43,7 +46,7 @@ mongoose.connection.on("error", () => {
   process.exit(1);
 })
 
-//app.use('/public', express.static(path.join(__dirname, '/public')));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
@@ -51,7 +54,7 @@ app.use(session({
   saveUninitialized: true,
   resave: true
 }));
-//app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -63,21 +66,21 @@ app.use('/', apiRouter);
 //////////////////////////////////////////
 
 /////////// ssr  ///////////////////////
-app.use(["/", "/user/:submitterName"], (req, res, next) => {
+app.use(["/all", "/user/:submitterName"], (req, res, next) => {
   const submitterName = req.params.submitterName || "";
   querySubmissions(submitterName).then((response) => {
       req.submissions = {data: response.data, total: response.total, submitter: response.submitter};
       next()
     }).catch((err) => {
       console.log(err);
-      next();
+      return next();
     })
 })
 
-app.use((req, res) => {
+app.use((req, res, next) => {
   const initialState = generateInitialState(req.isAuthenticated(), req.user, req.submissions);
   generateHtml(initialState, req.url).then((response) => {
-    res.render("index", {initialState: initialState, html: response});
+    res.render("index", {initialState: initialState, html: response, prod: prod});
   }).catch((error) => {
     switch (error.status) {
       case 500:
@@ -85,9 +88,11 @@ app.use((req, res) => {
         break;
       case 302:
         if(error.redirectPath){
+          console.log(error.redirectPath);
           res.status(302).redirect(error.redirectPath);
         }else{
-          res.sendStatus(302);
+          next();
+          //res.sendStatus(302);
         };
         break;
       default:

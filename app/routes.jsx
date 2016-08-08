@@ -29,7 +29,8 @@ export default function getRoutes(store){
 
   return (
     <Route path="/" component={Root}>
-      <IndexRoute component={SubmissionsPage} onEnter={loadSubmissions}/>
+      <IndexRedirect to="all"/>
+      <Route path="all" component={SubmissionsPage} onEnter={loadSubmissions}/>
       <Route path="profile" component={UserProfile} onEnter={requestAuthentication}/>
       <Route path="about" component={About} />
       <Route path="submission/add" component={SubmissionForm} onEnter={requestAuthentication}/>
