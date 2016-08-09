@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {connect} from 'react-redux';
 import {addSubmissionRequest, editSubmissionRequest} from './../actions/submissionsActions';
 
@@ -9,6 +10,7 @@ class SubmissionForm extends React.Component {
   constructor(props){
       super(props);
       this.onFormSubmit = this.onFormSubmit.bind(this);
+      this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
   }
 
   onFormSubmit(e){
@@ -50,13 +52,13 @@ class SubmissionForm extends React.Component {
               id="url"
               ref="url"
               label="Link to page"
-              type="text"
+              type="url"
               defaultValue={url} />
             <FormInputGroup
               id="image"
               ref="image"
               label="Image src"
-              type="text"
+              type="url"
               required
               defaultValue={image} />
               <div className="form-input-group center-align">

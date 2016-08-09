@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
+
 import {loadSubmissionsRequest} from './../actions/submissionsActions';
 
 import SubmissionsHeader from './SubmissionsHeader.jsx';
@@ -11,6 +13,7 @@ class SubmissionsPage extends React.Component {
   constructor(props){
     super(props);
     this.loadMore = this.loadMore.bind(this);
+    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
   }
 
   loadMore(){

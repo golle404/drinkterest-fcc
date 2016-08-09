@@ -5,6 +5,7 @@ import AuthForm from './AuthForm.jsx';
 import AuthSocial from './AuthSocial.jsx';
 
 const AuthenticationPage = ({params}) => {
+  
   const register = params.method === "register";
   return (
     <div className="form-container">

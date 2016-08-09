@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {connect} from 'react-redux';
 import {likeSubmissionRequest, deleteSubmissionRequest} from './../actions/submissionsActions';
 
@@ -11,6 +12,7 @@ class SubmissionTile extends React.Component {
     super(props);
     this.likeRequest = this.likeRequest.bind(this);
     this.deleteRequest = this.deleteRequest.bind(this);
+    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
   }
 
   likeRequest(){
@@ -24,7 +26,7 @@ class SubmissionTile extends React.Component {
   render () {
     const submission = this.props.submission;
     const user = this.props.user;
-    const voted = user.auth && submission.likes.indexOf(user.id) != -1;
+    const voted = user.auth && submission.likes.indexOf(user.id.toString()) != -1;
     return (
       <div className="submission-tile">
         <div className="submission-tile-image">
@@ -50,7 +52,7 @@ class SubmissionTile extends React.Component {
         </div>
         {submission.submitterId != user.id || <SubmissionToolbar
           deleteRequest={this.deleteRequest}
-          id={submission._id}/>}
+          id={submission._id} />}
       </div>
     );
   }

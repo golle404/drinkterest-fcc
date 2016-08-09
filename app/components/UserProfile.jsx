@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {connect} from 'react-redux';
 import {userLogoutRequest, userDeleteRequest} from './../actions/authActions';
 import {Link} from 'react-router';
@@ -9,6 +10,7 @@ class UserProfile extends React.Component {
     super(props);
     this.handleLogout = this.handleLogout.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
   }
 
   handleLogout(){

@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 html(lang="en")
-head
-  meta(charset="UTF-8")
-  meta(name="viewport" content="width=device-width, initial-scale=1")
-  title Drinkterest
-  -if(prod){
-    link(rel="stylesheet", href="/css/style.css")
-  -}
-body
-  #app!= html
-  script.
-    window.INITIAL_STATE = !{JSON.stringify(initialState)}
-  script(src="/js/bundle.js")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title Drinkterest
+    -if(prod){
+      link(rel="stylesheet", href="/css/style.css")
+    -}
+  body
+    #app!= html
+    script.
+      window.INITIAL_STATE = !{JSON.stringify(initialState)}
+    script(src="/js/bundle.js")
   

@@ -1,8 +1,14 @@
 import React, { PropTypes } from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {connect} from 'react-redux';
 import {hideNotification} from './../actions/notificationActions';
 
 class Notification extends React.Component {
+
+  constructor(props){
+    super(props);
+    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+  }
 
   componentDidUpdate(prevProps){
     if(this.props.active){

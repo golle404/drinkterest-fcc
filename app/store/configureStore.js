@@ -1,16 +1,22 @@
-import { fromJS, toMap, Map, toOrderedSet, Iterable, OrderedSet} from 'immutable';
+import { fromJS, OrderedSet} from 'immutable';
 import {createStore, applyMiddleware, compose} from 'redux';
 import rootReducer from '../reducers';
 import thunk from 'redux-thunk';
+import immutableStateInvariant from 'redux-immutable-state-invariant';
+
 import normalizeSubmissions from './../../utils/normalizeSubmissions';
 
 export default function configureStore(initState){
+  let middleware = [thunk, normalizeMiddleware];
+  if(process.env.NODE_ENV === "development"){
+    middleware.unshift(immutableStateInvariant());
+  }
   return createStore(
     rootReducer,
     toImmutableState(initState),
     compose(
-      applyMiddleware(thunk, normalizeMiddleware),
-      (module.hot ? window.devToolsExtension() : f => f )
+      applyMiddleware(...middleware),
+      typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
     )
   );
 }

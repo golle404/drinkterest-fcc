@@ -6,6 +6,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import connectMongo from 'connect-mongo';
+const MongoStore = connectMongo(session);
 
 import mongoose from 'mongoose';
 
@@ -25,10 +27,12 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackConfig from './webpack.config';
 
+import compression from 'compression';
+
 const app = express();
 
 ////////////  webpack config  //////////////
-const prod = process.env.NODE_ENV === 'production'
+const prod = (process.env.NODE_ENV === 'production');
 if(!prod){
   let compiler = webpack(webpackConfig);
   app.use(webpackDevMiddleware(compiler, {
@@ -36,9 +40,10 @@ if(!prod){
     publicPath: webpackConfig.output.publicPath
   }))
   app.use(webpackHotMiddleware(compiler));
-
-}
   app.use(logger("dev"));
+}else{
+  app.use(compression());
+}
 /////////  connect database  //////////////
 mongoose.connect(serverConfig.MONGO_PATH);
 mongoose.connection.on("error", () => {
@@ -52,7 +57,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
   secret: 'freecodecampdrinkterest',
   saveUninitialized: true,
-  resave: true
+  resave: true,
+  store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
@@ -88,11 +94,9 @@ app.use((req, res, next) => {
         break;
       case 302:
         if(error.redirectPath){
-          console.log(error.redirectPath);
           res.status(302).redirect(error.redirectPath);
         }else{
-          next();
-          //res.sendStatus(302);
+          res.sendStatus(302);
         };
         break;
       default:

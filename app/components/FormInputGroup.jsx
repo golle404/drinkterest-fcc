@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 
 class FormInputGroup extends React.Component {
   constructor(props){
@@ -6,6 +7,7 @@ class FormInputGroup extends React.Component {
     const isDirty = props.defaultValue && props.defaultValue.length != 0;
     this.state={isDirty: isDirty};
     this.inputChange = this.inputChange.bind(this);
+    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
   }
 
   componentWillReceiveProps(){
