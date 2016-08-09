@@ -9,6 +9,7 @@ const config = {
   noInfo: false,
   entry: [
     'webpack-hot-middleware/client?reload=true',
+    'whatwg-fetch',
     './app/index'
   ],
   output: {

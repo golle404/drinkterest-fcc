@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes';
 import {showNotification} from './notificationActions';
+import {Promise} from 'es6-promise';
 
 export const fetchRequested = () => {
   return { type: actionTypes.FETCH_REQUESTED};

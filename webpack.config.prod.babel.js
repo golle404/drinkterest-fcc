@@ -20,7 +20,10 @@ export default {
   debug: true,
   devtool: 'source-map',
   noInfo: false,
-  entry: './app/index',
+  entry: [
+    'whatwg-fetch',
+    './app/index'
+  ],
   target: 'web',
   output: {
     path: __dirname + '/public',
