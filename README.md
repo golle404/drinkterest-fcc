@@ -1,5 +1,7 @@
 ## Drinkterest
 
+[Live Preview](http://drinkterest-golle404.rhcloud.com)
+
 DRINKTEREST is my impementation of FreeCodeCamp ["Build a Pinterest Clone"](https://www.freecodecamp.com/challenges/build-a-pinterest-clone) challenge
 
 With DRINKTEREST App users can view submissions by other users, can vote on drink submission, and submit their own favorite drinks.
