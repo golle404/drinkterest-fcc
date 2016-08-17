@@ -49,7 +49,7 @@ export default {
     loaders: [
       {test: /(\.jsx|\.js)$/, loader: 'babel', exclude: /node_modules/},
       {test: /\.(eot|ttf|woff|woff2)$/, loader: 'file-loader?name=font/[name].[ext]'},
-      {test: /\.(jpe?g|gif)$/i, loaders: ['file-loader']},
+      {test: /\.(jpe?g|gif)$/i, loader: 'file-loader?name=images/[name].[ext]'},
       {test: /\.svg$/, loader: "url-loader?mimetype=image/svg+xml&limit=10000&name=svg/[name].[ext]"},
       {test: /\.ico$/, loader: 'file-loader?name=[name].[ext]'},
       {

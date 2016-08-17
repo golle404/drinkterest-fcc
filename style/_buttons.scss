@@ -64,13 +64,13 @@
   background-position: center;
   margin: 4px;
   &.icon-codepen{
-    background-image: url("svg/codepen-icon.svg");
+    background-image: url("../assets/svg/codepen-icon.svg");
   }
   &.icon-github{
-    background-image: url("svg/github-icon.svg");
+    background-image: url("../assets/svg/github-icon.svg");
   }
   &.icon-twitter{
-    background-image: url("svg/twitter-icon.svg");
+    background-image: url("../assets/svg/twitter-icon.svg");
   }
 
 }
@@ -86,9 +86,9 @@
   background-position: center;
 }
 .auth-twitter:before{
-  background-image: url("svg/twitter-icon.svg");
+  background-image: url("../assets/svg/twitter-icon.svg");
 }
 
 .auth-github:before{
-  background-image: url("svg/github-icon.svg");
+  background-image: url("../assets/svg/github-icon.svg");
 }

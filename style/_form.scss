@@ -35,6 +35,7 @@
   width: 100%;
   position: relative;
   padding-top: 1.8em;
+
   input{
     width: 100%;
     font-size: 1.2em;
@@ -43,6 +44,9 @@
     border-bottom: 1px solid $gray-soft;
     &:focus{
       outline: none;
+    }
+    &:-moz-ui-invalid:not(output){
+      box-shadow: none;
     }
     &:focus, &.dirty{
       &~label{

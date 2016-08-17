@@ -25,19 +25,19 @@
   .info{
     background-color: $info-color;
     &:before{
-      background-image: url("svg/ic_check_circle_white_24px.svg");
+      background-image: url("../assets/svg/ic_check_circle_white_24px.svg");
     }
   }
   .error{
     background-color: $error-color;
     &:before{
-      background-image: url("svg/ic_highlight_off_white_24px.svg");
+      background-image: url("../assets/svg/ic_highlight_off_white_24px.svg");
     }
   }
   .warning{
     background-color: $warning-color;
     &:before{
-      background-image: url("svg/ic_info_outline_white_24px.svg");
+      background-image: url("../assets/svg/ic_info_outline_white_24px.svg");
     }
   }
 }

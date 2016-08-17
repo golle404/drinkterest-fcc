@@ -25,12 +25,10 @@ const config = {
   ],
   module: {
     loaders: [
-      {test: /(\.jsx|\.js)$/, loaders: ['babel'], exclude: /node_modules/},
-      {test: /\.eot(\?v=\d+.\d+.\d+)?$/, loader: 'file'},
-      {test: /\.(woff|woff2)$/, loader: 'file-loader?prefix=font/&limit=5000'},
-      {test: /\.ttf(\?v=\d+.\d+.\d+)?$/, loader: 'file-loader?limit=10000&mimetype=application/octet-stream'},
-      {test: /\.(jpe?g|gif)$/i, loaders: ['file']},
-      {test: /\.svg$/, loader: "url-loader?mimetype=image/svg+xml"},
+      {test: /(\.jsx|\.js)$/, loader: 'babel', exclude: /node_modules/},
+      {test: /\.(eot|ttf|woff|woff2)$/, loader: 'file-loader?name=font/[name].[ext]'},
+      {test: /\.(jpe?g|gif)$/i, loader: 'file-loader?name=images/[name].[ext]'},
+      {test: /\.svg$/, loader: "url-loader?mimetype=image/svg+xml&limit=10000&name=svg/[name].[ext]"},
       {test: /\.ico$/, loader: 'file-loader?name=[name].[ext]'},
       {
         test: /(\.css|\.scss)$/,

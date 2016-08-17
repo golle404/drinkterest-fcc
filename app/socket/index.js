@@ -2,8 +2,8 @@ import io from 'socket.io-client';
 import normalizeSubmissions from './../../utils/normalizeSubmissions';
 import {addSubmission, updateSubmission, deleteSubmission} from './../actions/submissionsActions';
 
-const initSocket = (store) => {
-  const socket = io(`${location.protocol}//${location.hostname}:8090`);
+const initSocket = (store, path) => {
+  const socket = io(path, {forceNew: true});
 
   socket.on('submission_added', (json) => {
     store.dispatch(addSubmission(json.submission));

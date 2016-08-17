@@ -1,8 +1,11 @@
 import serverConfig from './config/server.config';
 import passportConfig from './config/passport.config';
 
+import favicon from 'serve-favicon';
 import path from 'path';
 import express from 'express';
+import {Server} from 'http';
+import socket from 'socket.io';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
@@ -30,6 +33,11 @@ import webpackConfig from './webpack.config';
 import compression from 'compression';
 
 const app = express();
+const server = Server(app);
+const io = socket(server);
+
+const port = process.env.NODEJS_PORT || "3000";
+const ip = process.env.NODEJS_IP || "127.0.0.1";
 
 ////////////  webpack config  //////////////
 const prod = (process.env.NODE_ENV === 'production');
@@ -61,6 +69,7 @@ app.use(session({
   store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(path.join(__dirname, './favicon.ico')));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -68,7 +77,7 @@ app.use(passport.session());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 ////////  router  ///////////////////////
-app.use('/', apiRouter);
+app.use('/', apiRouter(io));
 //////////////////////////////////////////
 
 /////////// ssr  ///////////////////////
@@ -86,7 +95,11 @@ app.use(["/all", "/user/:submitterName"], (req, res, next) => {
 app.use((req, res, next) => {
   const initialState = generateInitialState(req.isAuthenticated(), req.user, req.submissions);
   generateHtml(initialState, req.url).then((response) => {
-    res.render("index", {initialState: initialState, html: response, prod: prod});
+    res.render("index", {
+      initialState: initialState,
+      websocketPath: "http://" + ip + ":" + port,
+      html: response,
+      prod: prod});
   }).catch((error) => {
     switch (error.status) {
       case 500:
@@ -97,14 +110,16 @@ app.use((req, res, next) => {
           res.status(302).redirect(error.redirectPath);
         }else{
           res.sendStatus(302);
+          console.log(error);
         };
         break;
       default:
         res.sendStatus(404);
+        console.log(error);
     }
   })
 });
 
-app.listen(serverConfig.PORT, () => {
+server.listen(serverConfig.PORT, () => {
   console.log("Server listening at port " + serverConfig.PORT);
 })

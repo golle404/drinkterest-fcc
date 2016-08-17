@@ -25,24 +25,8 @@
   max-width: 400px;
   &-image{
     position: relative;
-    img{
-      width: 100%;
-      min-height: 100px;
-      position: relative;
-      &:before{
-        content: "";
-        position: absolute;
-        top: 0;
-        width: 100%;
-        height: 100px;
-        background: $whiteyer;
-        background-image: url('svg/ic_broken_image_gray_24px.svg');
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        display: block;
-      }
-    }
+    overflow: hidden;
+    background: $whiteyer;
   }
   &-overlay{
     width: 100%;
@@ -98,7 +82,7 @@
     }
     &:before{
       content: "";
-      background-image: url("svg/ic_favorite_border_red_24px.svg");
+      background-image: url("../assets/svg/ic_favorite_border_red_24px.svg");
       background-size: cover;
       width: 1em;
       height: 1em;
@@ -111,8 +95,28 @@
     }
     &.voted{
       &:before{
-        background-image: url("svg/ic_favorite_red_24px.svg");
+        background-image: url("../assets/svg/ic_favorite_red_24px.svg");
       }
     }
+  }
+}
+
+.imageloader{
+  width: 100%;
+  min-height: 100px;
+  background: $whiteyer;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: block;
+  img{
+    width: 100%;
+  }
+  &.failed{
+    background-image: url('../assets/svg/ic_broken_image_gray_24px.svg');
+  }
+  &.loading{
+    background-image: url('../assets/svg/ic_loop_black_24px.svg');
+    animation: spinner 1s infinite linear reverse;
   }
 }

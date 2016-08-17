@@ -4,7 +4,9 @@ import {connect} from 'react-redux';
 import {likeSubmissionRequest, deleteSubmissionRequest} from './../actions/submissionsActions';
 
 import {Link} from 'react-router';
+import ImageLoader from 'react-imageloader';
 import SubmissionToolbar from './SubmissionToolbar.jsx';
+
 
 class SubmissionTile extends React.Component {
 
@@ -30,7 +32,7 @@ class SubmissionTile extends React.Component {
     return (
       <div className="submission-tile">
         <div className="submission-tile-image">
-          <img src={submission.image} />
+          <ImageLoader src={submission.image} />
           <a
             className="submission-tile-overlay"
             href={submission.url}>
@@ -52,7 +54,7 @@ class SubmissionTile extends React.Component {
         </div>
         {submission.submitterId != user.id || <SubmissionToolbar
           deleteRequest={this.deleteRequest}
-          id={submission._id} />}
+          id={submission._id.toString()} />}
       </div>
     );
   }
